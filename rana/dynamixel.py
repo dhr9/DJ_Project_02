@@ -1,15 +1,15 @@
+from debug import debug
 
-def Dyna_code():
-	GO_TO_DYNA_1_POS
-	GO_TO_DYNA_2_POS
+GO_TO_DYNA_1_POS=0
+GO_TO_DYNA_2_POS=0
+
+@debug()	
+def dyna_write() :
+	for i in range(5):
+		dyna_read()
 	print()
 
-def dyna_write() :
-	print('dynamixel write:')
 
-
+@debug()
 def	dyna_read() :
-	print("dynamixel read :")
-
-dyna_write()
-dyna_read()
+	print()
