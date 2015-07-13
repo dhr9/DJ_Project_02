@@ -5,7 +5,7 @@ GO_TO_DYNA_2_POS=0
 
 @debug()	
 def dyna_write() :
-	for i in range(5):
+	for i in range(3):
 		dyna_read()
 	print()
 
