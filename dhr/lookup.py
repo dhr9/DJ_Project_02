@@ -15,14 +15,16 @@ def lookup(letter,directive,direction):
 
 	global LOOKUP_OUTPUT #delete later
 
-	if (directive = 1):
+	if (directive == 1):
 		#sort(26,directive)
+		LOOKUP_OUTPUT = [12,20,30]
 
-	else if (letter == "A"):
-		sort(0,directive)
-		# for A, index is 0
 	else:
-		LOOKUP_OUTPUT = [63,73,83]
+		if (letter == "A"):
+			sort(0,directive)
+			# for A, index is 0
+		else:
+			LOOKUP_OUTPUT = [63,73,83]
 
 @debug()
 def sort(index,directive):
