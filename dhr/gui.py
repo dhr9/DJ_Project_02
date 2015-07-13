@@ -3,7 +3,7 @@ import py_main
 print(py_main.CURRENT_ARRAY_LENGTH)
 print(py_main.CURRENT_ARRAY)
 
-py_main.CURRENT_ARRAY = ['R','A','N','A']
+py_main.CURRENT_ARRAY = ['R','A','R','A']
 
 print(py_main.CURRENT_ARRAY_LENGTH)
 print(py_main.CURRENT_ARRAY)
@@ -13,22 +13,22 @@ py_main.modify_blocks()
 print(py_main.CURRENT_ARRAY_LENGTH)
 print(py_main.CURRENT_ARRAY)
 
-py_main.CURRENT_ARRAY = ['D','H','R']
+# py_main.CURRENT_ARRAY = ['D','H','R']
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+# print(py_main.CURRENT_ARRAY_LENGTH)
+# print(py_main.CURRENT_ARRAY)
 
-py_main.modify_blocks()
+# py_main.modify_blocks()
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+# print(py_main.CURRENT_ARRAY_LENGTH)
+# print(py_main.CURRENT_ARRAY)
 
-py_main.CURRENT_ARRAY = ['R','I']
+# py_main.CURRENT_ARRAY = ['R','I']
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+# print(py_main.CURRENT_ARRAY_LENGTH)
+# print(py_main.CURRENT_ARRAY)
 
-py_main.modify_blocks()
+# py_main.modify_blocks()
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+# print(py_main.CURRENT_ARRAY_LENGTH)
+# print(py_main.CURRENT_ARRAY)

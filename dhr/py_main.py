@@ -1,12 +1,12 @@
 import lookup
 # import dynamixel
 
-from debug import debug
+#from debug import debug
 
 CURRENT_ARRAY_LENGTH = 0
 CURRENT_ARRAY = []
 
-@debug()
+#@debug()
 def modify_blocks():
 	global CURRENT_ARRAY_LENGTH
 	global CURRENT_ARRAY
@@ -21,7 +21,8 @@ def modify_blocks():
 		# print(lookup.DYNA_1_POS)
 		# print(lookup.DYNA_2_POS)
 		print(CURRENT_ARRAY[i])
-		lookup.lookup(CURRENT_ARRAY[i])
+		lookup.lookup(CURRENT_ARRAY[i],0,0)
+		# eg:- "A",pick,fwd
 		print(lookup.LOOKUP_OUTPUT)
 		# dynamixel.GO_TO_DYNA_1_POS = lookup.LOOKUP_OUTPUT[0]
 		# dynamixel.GO_TO_DYNA_2_POS = lookup.LOOKUP_OUTPUT[1]

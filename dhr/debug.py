@@ -3,7 +3,7 @@ from functools import wraps
 class debug() : 
 	def __init__(self,*args,**kwargs) : 
 		self.args = args
-		
+
 
 	def __call__(self,func) : 
 
@@ -13,6 +13,9 @@ class debug() :
 		@wraps(func)
 		def wrapper(*args,**kwargs) : 
 			print('entering ' + func.__name__)
-			func(*args) 
+			if(args != ()) : 
+				func(*args) 
+			else : 
+				func()
 			print('exiting ' + func.__name__)
 		return wrapper
