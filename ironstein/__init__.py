@@ -1,1 +1,1 @@
-from lookup import *
+from debug import *
