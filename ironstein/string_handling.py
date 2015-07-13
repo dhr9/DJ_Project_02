@@ -32,3 +32,9 @@ def remove_useless(string) :
 			return_string += string[i]
 		i += 1 
 	return(return_string)
+
+def string_to_int(string) : 
+	num = 0
+	for i in range(len(string)) : 
+		num += (10**(len(string)-i-1))*int(string[i])
+	return num

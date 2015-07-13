@@ -45,10 +45,6 @@ def edit_position_array(logs) :
 	for i in range(len(array)) : 
 		array[i] = remove_useless(array[i])
 
-	#-------------------------------------
-
-
-	#-------------------------------------
 
 	array = decode_array(array)
 	print(array)
@@ -62,15 +58,38 @@ def edit_position_array(logs) :
 	print(return_array)
 
 	for i in range(len(array)) : 
-		while(j < len(array[i])) :
-			string = ''
-			while((array[i][j] != ',') and (array[i][j] != '\n')) : 
-				string += array[i][j]
-				j += 1
-			j += 1
-		return_array[i][j].append(string)
+		for j in range(len(array[i])) : 
+			print(len(array[i][j]))
+			k = 0
+			while(k < len(array[i][j])) : 
+				string = ''
+				while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) : 
+					string += array[i][j][k]
+					k += 1
+					print(k)
+				k += 1
+
+				return_array[i][j].append(string)
+				print(string)
 
 	print(return_array)
+	array = return_array
+
+	return_array = []
+	for i in range(len(array)) : 
+		return_array.append([])
+		for j in range(len(array[i])) : 
+			return_array[i].append([])
+
+	for i in range(len(array)) : 
+		for j in range(len(array[i])) : 
+			for k in range(len(array[i][j])) : 
+				return_array[i][j].append(string_to_int(array[i][j][k]))
+
+	print(return_array)
+
+	global POSITION_ARRAY 
+	POSITION_ARRAY = return_array
 
 @debug()
 def decode_array(array) : 
