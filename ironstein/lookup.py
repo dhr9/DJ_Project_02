@@ -45,9 +45,32 @@ def edit_position_array(logs) :
 	for i in range(len(array)) : 
 		array[i] = remove_useless(array[i])
 
+	#-------------------------------------
+
+
+	#-------------------------------------
+
 	array = decode_array(array)
 	print(array)
-	return(array)
+
+	return_array = []
+	for i in range(len(array)) : 
+		return_array.append([])
+		for j in range(len(array[i])) : 
+			return_array[i].append([])
+
+	print(return_array)
+
+	for i in range(len(array)) : 
+		while(j < len(array[i])) :
+			string = ''
+			while((array[i][j] != ',') and (array[i][j] != '\n')) : 
+				string += array[i][j]
+				j += 1
+			j += 1
+		return_array[i][j].append(string)
+
+	print(return_array)
 
 @debug()
 def decode_array(array) : 
@@ -71,3 +94,9 @@ def decode_array(array) :
 
 
 init_lookup()
+
+def string_to_int(string) : 
+	num = 0
+	for i in range(len(string)) : 
+		num += (10**(len(string)-i-1))*int(string[i])
+	return num
