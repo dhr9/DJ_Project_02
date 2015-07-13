@@ -3,7 +3,7 @@ from functools import wraps
 class debug() : 
 	def __init__(self,*args,**kwargs) : 
 		self.args = args
-		print(self.args)
+		
 
 	def __call__(self,func) : 
 
