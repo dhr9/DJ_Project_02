@@ -1,1 +1,4 @@
-from lookup import *
+def rana() : 
+	print('hi')
+
+rana()

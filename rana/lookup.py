@@ -1,4 +1,4 @@
-LOOKUP_TEXT = open('lookup.txt','r+')
+#LOOKUP_TEXT = open('lookup.txt','r+')
 
 #------------------- ATTRIBUTES ----------------------
 
@@ -18,4 +18,4 @@ def shortest_possible(x,y) :
 def lookup() :
     print('hi')
 
-init_lookup() 
+init_lookup()

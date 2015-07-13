@@ -1,0 +1,14 @@
+# comment here
+
+a = {	[pos_1,pos_2,servo,availability],
+
+	[pos_1,pos_2,servo,availability],
+
+	[pos_1,pos_2,servo,availability],
+    }
+
+b = {	[pos_1,pos_2,servo,availability],
+
+	[pos_1,pos_2,servo,availability],
+
+    }	[pos_1,pos_2,servo,availability],

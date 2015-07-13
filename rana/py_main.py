@@ -6,6 +6,4 @@ from lookup import *
 h = 2
 def hi() :
     print(LOOKUP_OUTPUT)
-
-
-    
+   	
