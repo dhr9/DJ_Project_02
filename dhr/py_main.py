@@ -13,6 +13,7 @@ def modify_blocks():
 	for i in range (CURRENT_ARRAY_LENGTH):
 		print(i)
 		print(lookup.LOOKUP_OUTPUT)
+		print(CURRENT_ARRAY[i])
 		lookup.lookup(CURRENT_ARRAY[i])
 		print(lookup.LOOKUP_OUTPUT)
 		print("----")
