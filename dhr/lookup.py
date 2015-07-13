@@ -9,12 +9,16 @@ POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2
 @debug()
 def lookup(letter,directive,direction):
 	#directive = 0 for pick and 1 for place
+	#direction = 0 for fwd and 1 for bckwrd
 	#letter needs to be local
 	#directive needs to be local
 
 	global LOOKUP_OUTPUT #delete later
 
-	if (letter == "A"):
+	if (directive = 1):
+		#sort(26,directive)
+
+	else if (letter == "A"):
 		sort(0,directive)
 		# for A, index is 0
 	else:
@@ -37,12 +41,12 @@ def sort(index,directive):
 			if ( POSITION_ARRAY[ index ][ i ][ 6 ] != directive ):
 				#checking availability
 
-				print("i = ",i," j = ",j)
+				#print("i = ",i," j = ",j)
 
 				x = POSITION_ARRAY[ index ][ i ][ (j*2) +0 ]
 				y = POSITION_ARRAY[ index ][ i ][ (j*2) +1 ]
 				maximum[(2*i)+j] = max_of_two(x,y)
-				print("max[",(2*i)+j,"] = ",maximum[(2*i)+j])
+				#print("max[",(2*i)+j,"] = ",maximum[(2*i)+j])
 
 			else :
 				maximum[(2*i)+j] = 270
@@ -62,7 +66,7 @@ def sort(index,directive):
 	LOOKUP_OUTPUT[2] = POSITION_ARRAY[ index ][ i_min ][ j_min + 4 ]
 	POSITION_ARRAY[ index ][ i_min ][ 6 ] = directive
 
-@debug()
+#@debug()
 def max_of_two(x,y):
 	global DYNA_1_POS
 	global DYNA_2_POS
@@ -72,7 +76,7 @@ def max_of_two(x,y):
 		a=b                       	 #if b is greater
 	return a
 
-@debug()
+#@debug()
 def mod(s):
 	if (s<0):
 		s*=-1

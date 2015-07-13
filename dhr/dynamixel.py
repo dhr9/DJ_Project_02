@@ -5,11 +5,14 @@ GO_TO_DYNA_2_POS=0
 
 @debug()	
 def dyna_write() :
-	for i in range(3):
+	global GO_TO_DYNA_1_POS
+	global GO_TO_DYNA_2_POS
+	print("moving to ",GO_TO_DYNA_1_POS,",",GO_TO_DYNA_2_POS)
+	for i in range(2):
 		dyna_read()
-	print()
+	print("reached !")
 
 
-@debug()
+#@debug()
 def	dyna_read() :
-	print()
+	print("reading...")
