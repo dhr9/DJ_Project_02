@@ -7,12 +7,11 @@ class debug() :
 
 	def __call__(self,func) : 
 
-		if((self.args) == ('init_lookup',)) : 
-			print('hi')
-
 		@wraps(func)
 		def wrapper(*args,**kwargs) : 
 			print('entering ' + func.__name__)
 			func(*args) 
 			print('exiting ' + func.__name__)
 		return wrapper
+
+
