@@ -1,0 +1,17 @@
+
+def shortest_possible(x,y):
+
+    #
+    print ("shortest_possible called")
+    #
+    
+    a = mod(DYNA_1_POS - x)        #difference 1
+    b = mod(DYNA_2_POS - y)        #difference 2
+    if (a<b):
+        a=b                         #make a as the greater one
+    return a
+
+def mod(s):
+    if (s<0):
+        s*=-1
+    return s                        #make positive
