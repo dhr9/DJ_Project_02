@@ -12,3 +12,4 @@ def	dyna_read() :
 	print("dynamixel read :")
 
 dyna_write()
+dyna_read()
