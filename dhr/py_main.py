@@ -1,8 +1,10 @@
 import lookup
+from debug import debug
 
 CURRENT_ARRAY_LENGTH = 0
 CURRENT_ARRAY = []
 
+@debug()
 def modify_blocks():
 	global CURRENT_ARRAY_LENGTH
 	global CURRENT_ARRAY

@@ -1,8 +1,10 @@
+from debug import debug
+
 LOOKUP_OUTPUT = [0,0,0]
 DYNA_1_POS = 0
 DYNA_2_POS = 0
 
-
+@debug()
 def lookup(letter):
 	global LOOKUP_OUTPUT
 	global DYNA_1_POS
