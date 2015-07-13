@@ -9,7 +9,7 @@ class debug() :
 		@wraps(func)
 		def wrapper(*args,**kwargs) : 
 			print('entering ' + func.__name__)
-			return(func(*args)) 
+			return(func(*args))
 			print('exiting ' + func.__name__)
 		return wrapper
 
@@ -25,3 +25,12 @@ class logs() :
 		def wrapper(*Args,**kwargs) : 
 			print('to be edited as of now')
 		return wrapper
+
+# def debug(*arg,**kwarg) : 
+# 	def wrapper_function(func) : 
+# 		def wrapper(*args,**kwargs) : 
+# 			print('entering ' + func.__name__)
+# 			func(*args,**kwargs)
+# 			print('exiting ' + func.__name__)
+# 		return wrapper
+# 	return wrapper_function

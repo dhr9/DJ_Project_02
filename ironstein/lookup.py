@@ -11,6 +11,7 @@ def init_lookup() :
 	edit_position_array(logs_)
 	logs.close()
 
+@debug()
 def edit_position_array(logs) : 
 
 	character_array = []
@@ -46,13 +47,13 @@ def edit_position_array(logs) :
 
 	array = decode_array(array)
 	print(array)
+	return(array)
 
 @debug()
 def decode_array(array) : 
 	return_array = []
 	for i in range(len(array)) : 
 		return_array.append([])
-	print(return_array)
 	for i in range(len(array)) : 
 		j = 0
 		while(j < len(array[i])) : 
