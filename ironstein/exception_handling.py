@@ -1,5 +1,5 @@
-# from gui import e
+import sys
+gui = sys.modules['__main__']
 
-def e_(*args) : 
-	print(args)
-
+def handle() : 
+	gui.handle()

@@ -1,5 +1,7 @@
-import py_main
+#import py_main
+import lookup
 from debug import debug
+
 
 # print(py_main.CURRENT_ARRAY_LENGTH)
 # print(py_main.CURRENT_ARRAY)
@@ -34,5 +36,7 @@ from debug import debug
 # # print(py_main.CURRENT_ARRAY_LENGTH)
 # # print(py_main.CURRENT_ARRAY)
 
-def e(*args) : 
+def handle() : 
 	print('exception here')
+
+lookup.exception()

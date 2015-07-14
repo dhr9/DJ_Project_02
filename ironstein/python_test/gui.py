@@ -1,6 +1,6 @@
-print("module c")
-import a
-print("after c")
+print("module gui")
+import py_main as a
+print("after gui")
 
 VAR_C = 8
 
@@ -14,7 +14,8 @@ if __name__ == "__main__":
 	main()
 	print(VAR_C)
 	a.main()
-	print(a.VAR)
+	print(a.VAR_A)
+	print(a.b.VAR_B)
 	print(VAR_C)
 
 def change(x):

@@ -114,10 +114,13 @@ def decode_array(array) :
 
 
 #init_lookup()
-try : 
-	if('rana' != 'akash') :
-		raise NameError
+# try : 
+# 	if('rana' != 'akash') :
+# 		raise NameError
 
-except NameError : 
-	exception_handling.e_('rana')
+# except NameError : 
+# 	exception_handling.handle('rana')
+
+def exception() : 
+	exception_handling.handle()
 
