@@ -1,9 +1,11 @@
 import py_main
 
+print("import complete")
+print("khel shuru")
 print(py_main.CURRENT_ARRAY_LENGTH)
 print(py_main.CURRENT_ARRAY)
 
-py_main.CURRENT_ARRAY = ['A','R','A']
+py_main.CURRENT_ARRAY = ['A','R','A','A']
 
 print(py_main.CURRENT_ARRAY_LENGTH)
 print(py_main.CURRENT_ARRAY)
