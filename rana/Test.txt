@@ -1,1 +1,0 @@
-('My name is', 'rana'))('My name is', 'riyansh')('My name is', 'riyansh')('My name is', 'riyansh')('My name is', 'riyansh')

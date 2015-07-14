@@ -1,3 +1,0 @@
-1. check if value is within ranges
-2. letter to  array 
-3. arduino file

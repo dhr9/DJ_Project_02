@@ -1,5 +1,0 @@
-DEBUG:root:This message should go to the log file
-INFO:root:So should this
-WARNING:root:And this, too
-INFO:root:So should this
-WARNING:root:And this, too
