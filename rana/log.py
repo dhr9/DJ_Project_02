@@ -9,7 +9,7 @@ import logging
 #import py_main
 
 def main():
-	logging.basicConfig(filename='log.txt', level=logging.INFO)
+	logging.basicConfig(filename='log.txt',format='%(levelname)s:%(message)s', level=logging.INFO)
 	logging.info('logging started')
 	logging.info('logging fini')
 
