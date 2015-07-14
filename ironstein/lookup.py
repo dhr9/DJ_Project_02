@@ -1,5 +1,6 @@
 from debug import debug
 from string_handling import *
+import exception_handling
 
 POSITION_ARRAY = []
 
@@ -112,10 +113,11 @@ def decode_array(array) :
 	return(return_array)
 
 
-init_lookup()
+#init_lookup()
+try : 
+	if('rana' != 'akash') :
+		raise NameError
 
-def string_to_int(string) : 
-	num = 0
-	for i in range(len(string)) : 
-		num += (10**(len(string)-i-1))*int(string[i])
-	return num
+except NameError : 
+	exception_handling.e_('rana')
+

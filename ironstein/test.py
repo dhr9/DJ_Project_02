@@ -1,23 +1,28 @@
-def skip_character(string,character,i) : 
-	j = i
-	while((string[j] == character)and(i<len(string))) : 
-		j += 1 
-		print(j)
+# import sys
 
-	return j-i
+# try:
+#     f = open('lookup.txt')
+#     s = f.readline()
+#     i = int(s.strip())
+# except IOError as e:
+#     print ("I/O error({0}): {1}".format(e.errno, e.strerror))
+# # except ValueError:
+# #     print ("Could not convert data to an integer.")
+# except:
+#     print ("Unexpected error:", sys.exc_info()[0])
+#     raise
 
+for i in range(10) : 
+		
+	try : 
+		print('hmm')
+		try : 
+			if(i == 5) : 
+				raise NameError
+			print(i)
 
-def edit_position_array(logs) : 
+		except TypeError: 
+			print('exception i == 5')
 
-	character = ''
-	array = []
-	i = 0
-	print(logs)
-	while(i < len(logs)) : 
-		i += skip_character(logs,' ',i)
-		print(logs[i])
-		print('banana')
-		#print(i)
-		break
-
-edit_position_array('      sdf ')
+	except NameError : 
+		print('hi')	
