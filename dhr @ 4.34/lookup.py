@@ -190,12 +190,6 @@ def decode_array(array) :
 			return_array[i].append(string)
 	return(return_array)
 
-def string_to_int(string) : 
-	num = 0
-	for i in range(len(string)) : 
-		num += (10**(len(string)-i-1))*int(string[i])
-	return num
-
 ######### Initialization call #########
 
 init_lookup()

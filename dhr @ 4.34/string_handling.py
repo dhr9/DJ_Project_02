@@ -18,7 +18,8 @@ def skip_until_character(string,character,i) :
 	return j-i
 
 useless_array = [' ','\n','\t']
-def skip_useless(string,i) : 
+def skip_useless(string,i) :
+	useless_array = []
 	j = i
 	while(string[j] in useless_array) : 
 		for k in range(len(useless_array)) : 
