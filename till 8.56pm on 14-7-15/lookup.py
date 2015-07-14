@@ -193,4 +193,4 @@ def decode_array(array) :
 ######### Initialization call #########
 
 init_lookup()
-print("Position array :- ",POSITION_ARRAY)
+print("Position array :- "+str(POSITION_ARRAY))
