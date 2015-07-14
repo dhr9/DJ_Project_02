@@ -1,0 +1,32 @@
+INFO:root:logging started
+INFO:root:logging finished
+INFO:root:logging started
+INFO:root:logging finished
+INFO:root:logging started
+INFO:root:logging finished
+INFO:root:logging started
+INFO:root:logging finished
+INFO:root:logging started
+INFO:root:logging fini
+INFO:root:logging started
+INFO:root:logging fini
+INFO:root:logging started
+INFO:root:logging fini
+INFO:root:hi
+INFO:root:hi
+INFO:root:hi
+INFO:root:hi
+INFO:root:hi
+INFO:root:hi
+INFO:root:here
+INFO:root:R
+INFO:root:45
+INFO:root:here
+INFO:root:A
+INFO:root:63
+INFO:root:here
+INFO:root:N
+INFO:root:63
+INFO:root:here
+INFO:root:A
+INFO:root:63
