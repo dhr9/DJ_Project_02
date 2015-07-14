@@ -5,7 +5,7 @@ DYNA_1_POS = 0
 DYNA_2_POS = 0
 POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
 
-
+@logs()
 @debug()
 def lookup(letter,directive,direction):
 	#directive = 0 for pick and 1 for place
@@ -25,7 +25,7 @@ def lookup(letter,directive,direction):
 			# for A, index is 0
 		else:
 			LOOKUP_OUTPUT = [63,73,83]
-
+@logs()
 @debug()
 def sort(index,directive):
 	#directive needs to be local

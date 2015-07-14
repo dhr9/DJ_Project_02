@@ -2,16 +2,17 @@ import lookup
 import dynamixel
 import logging
 from debug import debug
+from log_decorator import logs
 
 CURRENT_ARRAY_LENGTH = 0
 CURRENT_ARRAY = []
 #logging.basicConfig(filename='log.txt', level=logging.INFO)
 
-
+@logs()
 def modify_blocks():
 	global CURRENT_ARRAY
-	logging.basicConfig(filename='log.txt',format='%(asctime)s: %(message)s: ', level=logging.INFO,)
-    	logging.info('hi')
+	# logging.basicConfig(filename='log.txt',format='%(asctime)s %(message )s' ,level=logging.INFO)
+ #    	logging.info('hi')
 	CURRENT_ARRAY_LENGTH = len(CURRENT_ARRAY)
 
 	logging.info(CURRENT_ARRAY_LENGTH)
@@ -37,5 +38,3 @@ def modify_blocks():
 		logging.info("----")
 
 	logging.info("-----------------")
-
-modify_blocks()
