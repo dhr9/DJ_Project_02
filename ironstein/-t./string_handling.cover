@@ -1,0 +1,40 @@
+    1: def char_to_int(c) : 
+               for i in range(256) :
+                       if(chr(i) == c) : 
+                               return i
+       
+    1: def skip_character(string,character,i) : 
+   11:         j = i
+   18:         while((string[j] == character)and(i<len(string))) : 
+    7:                 j += 1 
+       
+   11:         return j-i
+       
+    1: def skip_until_character(string,character,i) : 
+    7:         j = i
+   20:         while((string[j] != character)and(i<len(string))) : 
+   13:                 j += 1
+       
+    7:         return j-i
+       
+    1: useless_array = [' ','\n','\t']
+    1: def skip_useless(string,i) : 
+    8:         j = i
+   10:         while(string[j] in useless_array) : 
+    8:                 for k in range(len(useless_array)) : 
+    6:                         j += skip_character(string,useless_array[k],j)
+       
+    1: def remove_useless(string) : 
+    2:         i = 0
+    2:         return_string = ''
+  123:         while(i < len(string)) : 
+  121:                 if(not(string[i] in useless_array)) : 
+   97:                         return_string += string[i]
+  121:                 i += 1 
+    2:         return(return_string)
+       
+    1: def string_to_int(string) : 
+               num = 0
+               for i in range(len(string)) : 
+                       num += (10**(len(string)-i-1))*int(string[i])
+               return num

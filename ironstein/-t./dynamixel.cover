@@ -1,0 +1,21 @@
+    1: from debug import debug
+       
+    1: GO_TO_DYNA_1_POS=0
+    1: GO_TO_DYNA_2_POS=0
+       
+    1: def GO_TO_DYNA_1_POS_(*args) :
+               if(args != ()) :
+                       print('rananananana')
+                       GO_TO_DYNA_1_POS = args
+       
+       
+    1: @debug()        
+       def dyna_write() :
+   64:         for i in range(3):
+   48:                 dyna_read()
+   16:         print()
+       
+       
+    1: @debug()
+       def     dyna_read() :
+   48:         print()

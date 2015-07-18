@@ -1,0 +1,202 @@
+    1: from debug import debug
+    1: from string_handling import *
+       
+    1: LOOKUP_OUTPUT = [0,0,0]
+    1: DYNA_1_POS = 0
+    1: DYNA_2_POS = 0
+       #POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
+    1: POSITION_ARRAY = []
+       
+    1: @debug()
+       def lookup(letter,directive):
+               #directive = 0 for pick and 1 for place
+               ###direction = 0 for fwd and 1 for bckwrd
+               #letter needs to be local
+               #directive needs to be local
+       
+               global LOOKUP_OUTPUT #delete later
+       
+    8:         if (letter == "A"):
+    6:                 sort(0,directive)
+                       # for A, index is 0
+               else:   
+    2:                 LOOKUP_OUTPUT = [63,73,83]
+       
+    1: @debug()
+       def sort(index,directive):
+               #directive needs to be local
+               global POSITION_ARRAY
+               global POSITION_KEY
+       
+               # len_letters = len(POSITION_ARRAY)   #length of letters
+    6:         no_of_instances = len(POSITION_ARRAY[index])
+    6:         maximum = []
+   42:         for i in range(no_of_instances*2) :  
+   36:                 maximum.append([])
+               #loop to find maximums
+   24:         for i in range (no_of_instances):
+   54:                 for j in range (2):
+   36:                         if ( POSITION_ARRAY[ index ][ i ][ 6 ] != directive ):
+                                       #checking availability
+       
+                                       #print("i = ",i," j = ",j)
+       
+   24:                                 x = POSITION_ARRAY[ index ][ i ][ (j*2) +0 ]
+   24:                                 y = POSITION_ARRAY[ index ][ i ][ (j*2) +1 ]
+   24:                                 maximum[(2*i)+j] = max_of_two(x,y)
+                                       #print("max[",(2*i)+j,"] = ",maximum[(2*i)+j])
+       
+                               else :
+   12:                                 maximum[(2*i)+j] = 270
+                                       #max value possible
+               
+               # to find minimum
+    6:         i_min = 0
+    6:         j_min = 0
+   24:         for i in range (no_of_instances):
+   54:                 for j in range (2):
+   36:                         if(maximum[(2*i)+j] < maximum[(2*i_min)+j_min]):
+   13:                                 i_min = i
+   13:                                 j_min = j
+       
+    6:         LOOKUP_OUTPUT[0] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) ]
+    6:         LOOKUP_OUTPUT[1] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) + 1 ]
+    6:         LOOKUP_OUTPUT[2] = POSITION_ARRAY[ index ][ i_min ][ j_min + 4 ]
+    6:         POSITION_ARRAY[ index ][ i_min ][ 6 ] = directive
+       
+       #@debug()
+    1: def max_of_two(x,y):
+               global DYNA_1_POS
+               global DYNA_2_POS
+   24:         a = mod(DYNA_1_POS - x)          #difference 1
+   24:         b = mod(DYNA_2_POS - y)          #difference 2
+   24:         if (a<b):
+   24:                 a=b                              #if b is greater
+   24:         return a
+       
+       #@debug()
+    1: def mod(s):
+   48:         if (s<0):
+   14:                 s*=-1
+   48:         return s                        #make positive
+       
+       ########### RIYANSH CODES ##########
+       
+    1: @debug('init_lookup')
+       def init_lookup() : 
+    1:         logs = open('lookup.txt','r')
+    1:         logs_ = logs.read()
+               #print(logs_)
+    1:         edit_position_array(logs_)
+    1:         logs.close()
+       
+    1: @debug()
+       def edit_position_array(logs) : 
+       
+    1:         character_array = []
+    1:         array = []
+    1:         i = 0
+    2:         while(i < len(logs)) : 
+       
+    2:                 skip_useless(logs,i)
+       
+    2:                 if(logs[i] == '#') : 
+                               i += skip_until_character(logs,'\n',i)
+                               break
+       
+    2:                 character_array.append(logs[i])
+    2:                 i += skip_until_character(logs,'{',i)
+    2:                 i += 1
+       
+    2:                 string = ''
+  123:                 while(logs[i] != '}') : 
+  121:                         string += logs[i] 
+  121:                         i += 1
+    2:                 i += 1
+       
+    2:                 array.append(string)
+    2:                 if(i != len(logs)) : 
+    1:                         skip_useless(logs,i)
+                       else : 
+    1:                         break
+       
+               # now we have the array consisting of 
+    3:         for i in range(len(array)) : 
+    2:                 array[i] = remove_useless(array[i])
+       
+       
+    1:         array = decode_array(array)
+               #print(array)
+       
+    1:         return_array = []
+    3:         for i in range(len(array)) : 
+    2:                 return_array.append([])
+    7:                 for j in range(len(array[i])) : 
+    5:                         return_array[i].append([])
+       
+               #print(return_array)
+       
+    3:         for i in range(len(array)) : 
+    7:                 for j in range(len(array[i])) : 
+                               #print(len(array[i][j]))
+    5:                         k = 0
+   40:                         while(k < len(array[i][j])) : 
+   35:                                 string = ''
+   89:                                 while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) : 
+   54:                                         string += array[i][j][k]
+   54:                                         k += 1
+                                               #print(k)
+   35:                                 k += 1
+       
+   35:                                 return_array[i][j].append(string)
+                                       #print(string)
+       
+               #print(return_array)
+    1:         array = return_array
+       
+    1:         return_array = []
+    3:         for i in range(len(array)) : 
+    2:                 return_array.append([])
+    7:                 for j in range(len(array[i])) : 
+    5:                         return_array[i].append([])
+       
+    3:         for i in range(len(array)) : 
+    7:                 for j in range(len(array[i])) : 
+   40:                         for k in range(len(array[i][j])) : 
+   35:                                 return_array[i][j].append(string_to_int(array[i][j][k]))
+       
+               #print(return_array)
+       
+               global POSITION_ARRAY 
+    1:         POSITION_ARRAY = return_array
+       
+    1: @debug()
+       def decode_array(array) : 
+    1:         return_array = []
+    3:         for i in range(len(array)) : 
+    2:                 return_array.append([])
+    3:         for i in range(len(array)) : 
+    2:                 j = 0
+    7:                 while(j < len(array[i])) : 
+    5:                         skip_useless(array[i],j)
+    5:                         skip_character(array[i],',',j)
+    5:                         j += skip_until_character(array[i],'[',j)
+    5:                         j += 1
+    5:                         string = ''
+   89:                         while(array[i][j] != ']') : 
+   84:                                 string += array[i][j]
+   84:                                 j += 1
+    5:                         j += 1
+    5:                         return_array[i].append(string)
+    1:         return(return_array)
+       
+    1: def string_to_int(string) : 
+   35:         num = 0
+   89:         for i in range(len(string)) : 
+   54:                 num += (10**(len(string)-i-1))*int(string[i])
+   35:         return num
+       
+       ######### Initialization call #########
+       
+    1: init_lookup()
+    1: print("Position array :- ",POSITION_ARRAY)
