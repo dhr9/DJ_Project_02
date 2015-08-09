@@ -1,5 +1,5 @@
 int read_write = 13;
-int delay_ = 1;
+int delay_ = 1000;
 
 void setup() {
   Serial.begin(57600);
@@ -16,11 +16,11 @@ void loop() {
     }
     if(data == '\x01') {
       Serial.write('k');
-      digitalWrite(read_write,LOW);
-      delay(delay_);
+      digitalWrite(read_write,HIGH);
+      delay(2000);
       delayMicroseconds(500);
       //delayMicroseconds(delay_%1000);
-      digitalWrite(read_write,HIGH);
+      digitalWrite(read_write,LOW);
     }
   }
 }

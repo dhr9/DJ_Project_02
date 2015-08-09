@@ -45,7 +45,7 @@ def startup(com) :
 
 ##arduino =  startup('com7')
 ##dynamixel = startup('com3')
-arduino = startup('/dev/tty.usbmodem1411')
+arduino = startup('/dev/tty.usbmodem1421')
 dynamixel = startup('/dev/tty.usbserial-A800doqB')
 # arduino = startup('/dev/tty.usbmodem1411')
 
