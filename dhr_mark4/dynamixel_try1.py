@@ -14,6 +14,8 @@
 import time                              #import time liabrary to use the time.sleep()
                                          #function to generate delays
 import serial                            #import the serial library 
+import platform
+import serial_ports_setup
 
 def startup(com) :
     ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
@@ -22,13 +24,22 @@ def startup(com) :
     print(ser.baudrate)
     return ser
 
-##arduino2 = startup('com4')
-arduino =  startup('com3')
-dynamixel = startup('com4')
-##dynamixel = startup('/dev/tty.usbserial-A90246TV')
-##arduino = startup('/dev/tty.usbmodem1411')
-##arduino = startup('/dev/tty.usbmodem1421')
+arduino = ''
+dynamixel = ''
+system = ''
 
+def init() : 
+    global system 
+    global dynamixel
+    global arduino
+
+    [dynamixel,arduino] = serial_ports_setup.find_dynamixel_and_arduino()
+    print('dynamixel : ',dynamixel)
+    print('arduino : ',arduino)
+    dynamixel = startup(dynamixel)
+    arduino = startup(arduino)
+
+init()
 
 '''
 I N S T R U C T I O N   P A C K E T :
