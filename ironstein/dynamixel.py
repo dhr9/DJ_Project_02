@@ -1,55 +1,3 @@
-from debug import debug
-
-GO_TO_DYNA_1_POS=0
-GO_TO_DYNA_2_POS=0
-
-# def GO_TO_DYNA_1_POS_(*args) :
-# 	if(args != ()) :
-# 		print('rananananana')
-# 		GO_TO_DYNA_1_POS = args
-
-
-# @debug()	
-# def dyna_write() :
-# 	for i in range(3):
-# 		dyna_read()
-# 	print()
-
-
-# @debug()
-# def	dyna_read() :
-# 	print()
-
-'''to communicate with the dynamixel motor via the max485 ic , we need to set up a
-    virtual com port and create an instance of the serial.Serial class , so as to
-    use it to read data from and write data to the dynamixel
-        serial<id,open=(true/false)>(port = ?,baudrate = ?,bytesize = ?,parity = 'Y/N',
-    stopbits = ?,timeout = ?,xonxoff = (True/False),rtscts = (True/False),dsrdtr =
-    (True/False))
-'''
-
-
-##INSTRUCTIONS ABOUT HOW TO USE THIS CODE IS AT THE BOTTOM OF THE CODE 
-
-
-import time                              #import time liabrary to use the time.sleep()
-                                         #function to generate delays
-import serial                            #import the serial library 
-
-def startup(com) :
-    ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
-    print(ser)
-    ser.baudrate = 57600                 #set baudrate equal to 9600
-    print(ser.baudrate)
-    return ser
-
-##arduino =  startup('com7')
-##dynamixel = startup('com3')
-arduino = startup('/dev/tty.usbmodem1421')
-dynamixel = startup('/dev/tty.usbserial-A800doqB')
-# arduino = startup('/dev/tty.usbmodem1411')
-
-
 '''
 I N S T R U C T I O N   P A C K E T :
 
@@ -177,8 +125,70 @@ the dynamixel executes command received from the main controller and returns the
     part6)checksum :
         it is used to check if the packet is damaged during communication
         checksum = ~(id + length + error + parameter1 + parameter2 + ...)
-
+--------------------------------------------------------------------------------------
 '''
+
+from debug import debug
+
+GO_TO_DYNA_1_POS=0
+GO_TO_DYNA_2_POS=0
+
+# def GO_TO_DYNA_1_POS_(*args) :
+#   if(args != ()) :
+#       print('rananananana')
+#       GO_TO_DYNA_1_POS = args
+
+
+# @debug()  
+# def dyna_write() :
+#   for i in range(3):
+#       dyna_read()
+#   print()
+
+
+# @debug()
+# def   dyna_read() :
+#   print()
+
+'''to communicate with the dynamixel motor via the max485 ic , we need to set up a
+    virtual com port and create an instance of the serial.Serial class , so as to
+    use it to read data from and write data to the dynamixel
+        serial<id,open=(true/false)>(port = ?,baudrate = ?,bytesize = ?,parity = 'Y/N',
+    stopbits = ?,timeout = ?,xonxoff = (True/False),rtscts = (True/False),dsrdtr =
+    (True/False))
+'''
+
+import time                              #import time liabrary to use the time.sleep()
+                                         #function to generate delays
+import serial                            #import the serial library 
+import platform
+
+def startup(com) :
+    ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
+    print(ser)
+    ser.baudrate = 57600                 #set baudrate equal to 9600
+    print(ser.baudrate)
+    return ser
+
+arduino = ''
+dynamixel = ''
+system = ''
+
+def init() : 
+    global system 
+    global dynamixel
+    global arduino
+    system = platform.system()
+    print('system : ',system)
+    if(system == 'Darwin') : 
+        dynamixel = '/dev/tty.usbserial-A800doqB'
+        arduino = '/dev/tty.usbmodem1411'
+    elif(system == 'Windows') : 
+        dynamixel = 'com3'
+        arduino = 'com7'
+
+    dynamixel = startup(dynamixel)
+    arduino = startup(arduino)
 
 def not_checksum(l) :
 	checksum = 0
@@ -221,6 +231,7 @@ def build_instruction_packet(motor_id,instruction,*args) :
 def send_instruction(motor_id,instruction,*args) :
     
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
+    print(instruction_packet)
     arduino.write('\x01')
     while(arduino.inWaiting() == 0) :
         1 == 1
@@ -261,12 +272,6 @@ def setup_dynamixel_communication() :
         if(count < 200) :
             arduino.write('\x02')
             setup_dynamixel_communication()
-
-
-##        string = ''
-##        for i in range(dynamixel.inWaiting()) : 
-##            string += dynamixel.read(dynamixel.inWaiting())
-##        if(string == '\xff\xff\x01\x02\x00\xfc') :
-##           print('done')
-##
-##
+arduino
+dynamixel
+init()

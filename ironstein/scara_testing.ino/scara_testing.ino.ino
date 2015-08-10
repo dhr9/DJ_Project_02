@@ -16,11 +16,10 @@ void loop() {
     }
     if(data == '\x01') {
       Serial.write('k');
-      digitalWrite(read_write,HIGH);
-      delay(2000);
-      delayMicroseconds(500);
-      //delayMicroseconds(delay_%1000);
       digitalWrite(read_write,LOW);
+      delay(104);
+      //delayMicroseconds(delay_%1000);
+      digitalWrite(read_write,HIGH);
     }
   }
 }
