@@ -162,6 +162,7 @@ import time                              #import time liabrary to use the time.s
                                          #function to generate delays
 import serial                            #import the serial library 
 import platform
+import serial_ports_setup
 
 def startup(com) :
     ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
@@ -178,15 +179,10 @@ def init() :
     global system 
     global dynamixel
     global arduino
-    system = platform.system()
-    print('system : ',system)
-    if(system == 'Darwin') : 
-        dynamixel = '/dev/tty.usbserial-A800doqB'
-        arduino = '/dev/tty.usbmodem1411'
-    elif(system == 'Windows') : 
-        dynamixel = 'com3'
-        arduino = 'com7'
 
+    [dynamixel,arduino] = serial_ports_setup.find_dynamixel_and_arduino()
+    print('dynamixel : ',dynamixel)
+    print('arduino : ',arduino)
     dynamixel = startup(dynamixel)
     arduino = startup(arduino)
 
