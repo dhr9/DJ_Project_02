@@ -1,0 +1,29 @@
+int read_write = 13;
+int done = 12345;
+
+void setup() {
+  
+  Serial.begin(57600);
+  pinMode(read_write,OUTPUT);
+  digitalWrite(read_write,HIGH);
+  
+}
+
+void loop() {
+  
+  if(Serial.available() > 0) {
+   
+    char data = Serial.read();
+    if(data == 'w') {
+      
+      digitalWrite(read_write,LOW);  
+      delay(17);
+      delayMicroseconds(600);
+      digitalWrite(read_write,HIGH);
+    }
+    
+    Serial.write('s');
+      
+  }
+  
+}

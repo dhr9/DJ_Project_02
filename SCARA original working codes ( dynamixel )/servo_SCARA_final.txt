@@ -1,0 +1,132 @@
+int x,y,z,i;
+float ser_var_1;
+float p;
+//p=45;
+//int neg=90;
+//do comment p and neg 
+
+int comma=222;
+int com_pick=200;
+int com_place=211;
+//one needs to be odd and the other even
+
+int rot_ser=6;
+int vert_ser=5;
+int hand_ser=3;
+float pick_val=45;
+float place_val=140;
+
+float ser_0 = 0.6;
+float ser_180 = 2.2;
+//changed acc to motor if reqd
+
+void move_servo1(float a,int b){
+  int val,val2;
+  a*=ser_var_1;
+  a+=ser_0;
+//  Serial.println(a);
+  val=a*1000;
+  val2=3000-val;
+  digitalWrite(b,HIGH);
+  delayMicroseconds(val);
+  digitalWrite(b,LOW);
+  delayMicroseconds(val2);
+  delay(17);
+    //Serial.println('_');
+}
+
+void move_servo(float a,int b){
+  int i;
+ // Serial.println('.');
+ // Serial.println(a);
+  for(i=0;i<=20;i++){
+    move_servo1(a,b);
+  } 
+}
+
+void arm(float p,int s){
+  float f;
+  if(s==0){
+    f=pick_val;
+  }
+  if(s==1){
+    f=place_val;
+  }
+  move_servo(p,rot_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(180,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+  move_servo(f,hand_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(0,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+}
+
+/*
+void pick(float p){
+  move_servo(p,rot_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(180,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+  move_servo(pick_val,hand_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(0,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+}
+void place(float p){
+  move_servo(p,rot_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(180,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+  move_servo(place_val,hand_ser);
+  digitalWrite(13,HIGH);
+  delay(1000);
+  move_servo(0,vert_ser);
+  digitalWrite(13,LOW);
+  delay(1000);
+}
+*/
+
+void setup(){
+  Serial.begin(57600);
+  pinMode(3,OUTPUT);
+  pinMode(5,OUTPUT);
+  pinMode(6,OUTPUT);
+  pinMode(13,OUTPUT);
+  pinMode(4,INPUT);
+  ser_var_1=ser_180-ser_0;
+  ser_var_1/=180.0;
+}
+
+void loop(){
+  /*
+  move_servo(0,rot_ser);
+  delay(1000);
+  move_servo(180,rot_ser);
+  delay(1000);
+  */
+  /*
+  arm(45,1);
+  delay(5000);
+  arm(135,0);
+  delay(5000);
+  */
+  if(Serial.available()==3){
+    x= Serial.read();
+    y= Serial.read();
+    z= Serial.read();
+    if(y==222 && (x==com_pick || x==com_place)){
+      arm(z,x%2);
+    }
+  }
+}
