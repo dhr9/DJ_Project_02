@@ -208,7 +208,7 @@ def rw(n) :
             if(n == 'h')  :
                 arduino.write('h')
             else:
-                print "problem in rw()"
+                print("problem in rw()")
 
 def angle_to_hex(angle) :
     angle=(angle+180)%360
@@ -254,9 +254,9 @@ def dhr_test():
     dhr_write2(0x02,0x0ff,0x0f,0xff,0x03)
     time.sleep(3)
     data=dynamixel.inWaiting()
-    print data
+    print (data)
     data=dynamixel.read(dynamixel.inWaiting())
-    print data
+    print (data)
 
 def pick(angle):
     arduino2.write(chr(200) + chr(222) + chr(angle))
@@ -279,7 +279,7 @@ def dhr_read(l):
 
 def dhr_read_print():
     p = list(dynamixel.read(dynamixel.inWaiting()))
-    print p
+    print (p)
     
 def check(p):
     if ( p[4] == '\x00'):
@@ -288,10 +288,10 @@ def check(p):
         error_bit_error()
 
 def read_error():
-    print 'Data Receive Error'
+    print ('Data Receive Error')
 
 def error_bit_error():
-    print 'Error bit not zero'
+    print ('Error bit not zero')
     
 def dhr_run():
     dhr_write(0x01,40,0xff,0x03)
@@ -329,7 +329,7 @@ def dhr_ping(id_):
     dynamixel.write(data)
 
 def dhr_setup1():
-    print list(dynamixel.read(dynamixel.inWaiting()))
+    print (list(dynamixel.read(dynamixel.inWaiting())))
     k = '\xff\xff\x01\x02\x00\xfc'
     m = len(k)
     for i in range(0,35):
@@ -337,25 +337,25 @@ def dhr_setup1():
             val = i*1000 + j*100
             dhr_ping(1)
             p = dynamixel.read(dynamixel.inWaiting())
-            print str(val)+" = "+str(list(p))
+            print (str(val)+" = "+str(list(p)))
             if (len(p)== m):
                 if p == k:
-                    print "--------------"
+                    print ("--------------")
                     break
             rw('h')
             time.sleep(0.1)
             ard = arduino.read(arduino.inWaiting())
-            print list(ard)
-            print "@"
+            print (list(ard))
+            print ("@")
             wnum =dynamixel.inWaiting()
             wlist = dynamixel.read(wnum)
-            print list(wlist)
-            print "#"
-        print "----"
+            print (list(wlist))
+            print ("#")
+        print ("----")
         rw('t')
         
 def dhr_setup2():
-    print list(dynamixel.read(dynamixel.inWaiting()))
+    print (list(dynamixel.read(dynamixel.inWaiting())))
     k = '\xff\xff\x02\x02\x00\xfb'
     m = len(k)
     n=15
@@ -364,19 +364,19 @@ def dhr_setup2():
             val = i*1000 + j*100
             dhr2(n)
             p = dynamixel.read(dynamixel.inWaiting())
-            print str(val)+" = "+str(list(p))
+            print (str(val)+" = "+str(list(p)))
             dhr_search(list(p))
             rw('h')
             time.sleep(0.5)
             n*=-1
             ard = arduino.read(arduino.inWaiting())
-            print list(ard)
-            print "@"
+            print (list(ard))
+            print ("@")
             wnum =dynamixel.inWaiting()
             wlist = dynamixel.read(wnum)
-            print list(wlist)
-            print "#"
-        print "----"
+            print (list(wlist))
+            print ("#")
+        print ("----")
         rw('t')
 
 def dhr_search(l):
@@ -389,11 +389,11 @@ def dhr_search(l):
             for j in range(i,i+5):
                 k[y]=l[i]
                 y+=1
-            print list(k)
+            print (list(k))
             if (k==list('\xff\xff\x02\x02\x00\xfb')):
-                print "HOORAY"
+                print ("HOORAY")
             else:
-                print "almost :("
+                print ("almost :(")
 
 def  dhr_write2(id_ ,position_low,position_high,speed_low,speed_high):
     checksum = [id_ , 0x07 , 0x03 , 0x1e , position_low , position_high , speed_low , speed_high]
