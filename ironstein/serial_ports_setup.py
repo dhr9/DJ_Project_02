@@ -17,9 +17,11 @@ def find_dynamixel_and_arduino() :
                 dynamixel = port
             elif(port.startswith('/dev/tty.usbmodem')) : 
                 arduino = port 
-    elif(system.startswith('Win')) : 
-        dynamixel = 'com3'
-        arduino = 'com7'
+    elif(system.startswith('Win')) :
+        if(len(serial_ports_list) != 2):
+            print("Connect Exactly two serial devices")
+        dynamixel = 'com4'
+        arduino = 'com3'
     else : 
         print('unsupported operating system')
 
