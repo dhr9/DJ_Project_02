@@ -176,15 +176,18 @@ dynamixel = ''
 system = ''
 
 def init() : 
+
     global system 
     global dynamixel
-    global arduino
+    # global arduino
 
-    [dynamixel,arduino] = serial_ports_setup.find_dynamixel_and_arduino()
+    system = platform.system()
+    # [dynamixel,arduino] = serial_ports_setup.find_dynamixel_and_arduino()
+    [dynamixel] = serial_ports_setup.find_dynamixel_and_arduino()
     print('dynamixel : ',dynamixel)
-    print('arduino : ',arduino)
+    # print('arduino : ',arduino)
     dynamixel = startup(dynamixel)
-    arduino = startup(arduino)
+    # arduino = startup(arduino)
 
 def not_checksum(l) :
 	checksum = 0
@@ -201,18 +204,19 @@ def rw(n) :
     if(n == 'w') : 
         arduino.write('r')
 
-parameter_required_instruction_array = [0x02,0x03,0x04]
 
 def instruction_length(instruction,*args) :
-    if(instruction in parameter_required_instruction_array) :
+    instructions_that_require_parameters = [0x02,0x03,0x04]
+    if(instruction in instructions_that_require_parameters) :
         return (len(args) + 2)
     else :
         return 2
 
 def build_instruction_packet(motor_id,instruction,*args) : 
+    instructions_that_require_parameters = [0x02,0x03,0x04]
     instruction_length_ = instruction_length(instruction,*args)
     checksum = [motor_id,instruction_length_,instruction]
-    if(instruction in parameter_required_instruction_array) :
+    if(instruction in instructions_that_require_parameters) :
         for i in range(len(args)) :
             checksum.append(args[i])
     not_checksum_ = not_checksum(checksum)
@@ -225,16 +229,35 @@ def build_instruction_packet(motor_id,instruction,*args) :
 
 
 def send_instruction(motor_id,instruction,*args) :
-    
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
-    print(instruction_packet)
-    arduino.write('\x01')
-    while(arduino.inWaiting() == 0) :
-        1 == 1
-    data = arduino.read(arduino.inWaiting())
-    #print(data)
+    string = ''
+    for character in instruction_packet :
+        string += char_to_int(character)
+    print(chr(string),end='')
+##    arduino.write('w\0')
+##    while(arduino.inWaiting() == 0) :
+##        1 == 1
+##    data = arduino.read(arduino.inWaiting())
+##    #print(data)
+##    if(data == 'Q') : 
+##        dynamixel.write(instruction_packet)
+##        print('correct data received')
+##    else : 
+##        print('wrong data received from arduino')
     dynamixel.write(instruction_packet)
-    
+    time.sleep(0.001)
+    status_packet = dynamixel.read(dynamixel.inWaiting())
+    if(check_status_packet(instruction_packet,status_packet)) : 
+        print('succesful') 
+    else : 
+        print('something went wrong')
+
+def check_status_packet() :
+
+def char_to_int(character) :
+    for i in range(256) :
+        if(chr(i) == character) :
+            return(i)
 
 def wait_for_reply() :
     while(arduino.inWaiting() == 0) :
@@ -268,6 +291,5 @@ def setup_dynamixel_communication() :
         if(count < 200) :
             arduino.write('\x02')
             setup_dynamixel_communication()
-arduino
-dynamixel
+
 init()

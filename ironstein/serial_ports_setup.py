@@ -23,7 +23,8 @@ def find_dynamixel_and_arduino() :
     else : 
         print('unsupported operating system')
 
-    return [dynamixel,arduino]
+    # return [dynamixel,arduino]
+    return [dynamixel]
 
 def serial_ports():
     """Lists serial ports
