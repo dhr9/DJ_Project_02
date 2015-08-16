@@ -1,4 +1,5 @@
 from debug import debug
+import serial
 import exception_handling
 
 GO_TO_DYNA_1_POS=0

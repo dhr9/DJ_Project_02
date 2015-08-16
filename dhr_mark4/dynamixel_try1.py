@@ -210,7 +210,13 @@ def not_checksum(l) :
 
 def rw(n) :
     if(n == 'w')  :
-        arduino.write('w')
+        arduino.write('w\0')
+    elif(n == 'f'):
+        arduino.write('f\0')
+    elif(n == 'c'):
+        arduino.write('c')
+    else:
+        print("CHECK FOR ERROR IN \'rw()\'")
 
 def angle_to_hex(angle) :
     angle=(angle+180)%360
@@ -276,6 +282,7 @@ def dhr_read(l):
     if (len(p)==6):
         check(p)
     else:
+        print(p)
         read_error()
 
 def check(p):
@@ -324,6 +331,94 @@ def  dhr_write2(id_ ,position_low,position_high,speed_low,speed_high):
     rw('w')
     time.sleep(0.001)
     dynamixel.write(data)
+
+###########  N E W   F U N C T I O N S  #############
+#####################################################
+"""
+def dhr_write(id_ ,angle,speed_low,speed_high):
+    pos_bytes = angle_to_hex(angle)
+    position_low = pos_bytes[0]
+    position_high = pos_bytes[1]
+    dhr_write1(id_ ,position_low,position_high,speed_low,speed_high)
+
+def  dhr_write1(id_ ,position_low,position_high,speed_low,speed_high):
+    checksum = [id_ , 0x07 , 0x03 , 0x1e , position_low , position_high , speed_low , speed_high]
+    __not_checksum__ = not_checksum(checksum)
+    position_low = chr(position_low)
+    position_high = chr(position_high)
+    data = '\xff\xff' + chr(id_) + '\x07\x03\x1e' + position_low + position_high + chr(speed_low) + chr(speed_high) + chr(__not_checksum__)
+    print list(data)
+    rw('w')
+    time.sleep(0.001)
+    dynamixel.write(data)
+"""
+def w2(angle):
+    new_write(0x02,angle,0xff,0x03)
+
+def wait(x):
+    while(x.inWaiting()==0):
+        a = 0
+    return x.read(x.inWaiting())
+    
+def new_write(id_ ,angle,speed_low,speed_high):
+    pos_bytes = angle_to_hex(angle)
+    position_low = pos_bytes[0]
+    position_high = pos_bytes[1]
+    checksum = [id_ , 0x07 , 0x03 , 0x1e , position_low , position_high , speed_low , speed_high]
+    __not_checksum__ = not_checksum(checksum)
+    position_low = chr(position_low)
+    position_high = chr(position_high)
+    data = '\xff\xff' + chr(id_) + '\x07\x03\x1e' + position_low + position_high + chr(speed_low) + chr(speed_high) + chr(__not_checksum__)
+    print list(data)
+    rw('w')
+    time.sleep(0.001)
+    dynamixel.write(data)
+    """
+    ard_data = wait(arduino)
+    if( ard_data == 'Q'):
+        dynamixel.write(data)
+        print('Q aaya')
+    else:
+        print("Wrong data from Arduino: ",ard_data)
+    """
+    #dyna_data = list(wait(dynamixel))
+    #print("Data Recvd : ",dyna_data)
+    #1 new_check(dyna_data)
+    #print(type(dyna_data))
+
+def compare_string(data):
+    compare(data[0],'0xff')
+    compare(data[1],'0xff')
+    #compare(data[2],'0xff')
+    #compare(data[3],'0xff')
+    compare(data[4],'0x00')
+    #compare(data[5],'0xff')
+    
+def compare(a,b):
+    if(type(a) == type(b)):
+        if(a==b):
+            return
+        else:
+            print("WRONG BIT:- got ",a," instead of ",b)
+    else:
+        print("TYPE ERROR:- got ",type(a)," instead of ",type(b))
+
+def new_check(data):
+    if(len(data) == 6):
+        print("LENGTH = 6")
+        compare_string(data)
+    else:
+        print("LENGTH NOT 6")
+    
+def change(n):
+    rw('c')
+    arduino.write(str(n))
+    arduino.write('\0')
+    print("changed value to ",wait(arduino))
+    
+def minimum_finder():
+    w2(0)
+    
 
 #################################################################
 #################################################################

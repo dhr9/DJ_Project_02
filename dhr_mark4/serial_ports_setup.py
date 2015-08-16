@@ -5,10 +5,10 @@ import platform
 
 def find_dynamixel_and_arduino() : 
     system = platform.system()
-    print(system)
+    #print(system)
     serial_ports_list = serial_ports()
-    print('available serial ports : ')
-    print(serial_ports_list)
+    #print('available serial ports : ')
+    #print(serial_ports_list)
     dynamixel = ''
     arduino = ''
     if(system.startswith('Darwin')) : 
