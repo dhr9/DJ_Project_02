@@ -1,6 +1,36 @@
 def check_status_packet(instruction_packet,status_packet) : 
-	print()
+	expected_status_packet = generated_expected_status_packet(instruction_packet)
+	if(expected_status_packet.instruction != 2) :
+		if (expected_status_packet.generated_status_packet in status_packet) :
+			return True
+		else : 
+			new_status_packet = ''
+			for i in range(len(expected_status_packet)) :
+				new_status_packet += status_packet[i]
+			status_packet = new_status_packet
+			if((status_packet[0] == '\xff') and (status_packet[1] == '\xff')) : 
+				if(status_packet[5] != 0) : 
+					error = error_byte_decode(status_packet[5])
+					return error
+				else :
+					return 'BAD STATUS PACKET'
+			else : 
+				return 'INVALID PACKET SYNTAX'
+	else : 
+		print()
 
+def error_byte_decode() : 
+	error = {
+	0 : 'INPUT VOLTAGE ERROR'
+	1 : 'ANGLE LIMIT ERROR'
+	2 : 'OVERHEATING ERROR'
+	3 : 'RANGE ERROR'
+	4 : 'CHECKSUM ERROR'
+	5 : 'OVERLOAD ERROR'
+	6 : 'INSTRUCTION ERROR'
+	7 : 'INVALID ERROR BYTE' 
+	
+	}
 
 class generated_expected_status_packet() : 
 	
