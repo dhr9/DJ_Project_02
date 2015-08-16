@@ -5,10 +5,10 @@ import platform
 
 def find_dynamixel_and_arduino() : 
     system = platform.system()
-    #print(system)
+    print(system)
     serial_ports_list = serial_ports()
-    #print('available serial ports : ')
-    #print(serial_ports_list)
+    print('available serial ports : ')
+    print(serial_ports_list)
     dynamixel = ''
     arduino = ''
     if(system.startswith('Darwin')) : 
@@ -20,12 +20,14 @@ def find_dynamixel_and_arduino() :
     elif(system.startswith('Win')) :
         if(len(serial_ports_list) != 2):
             print("Connect Exactly two serial devices")
-        dynamixel = 'com4'
+        dynamixel = 'com7'
         arduino = 'com3'
     else : 
         print('unsupported operating system')
 
-    return [dynamixel,arduino]
+    # return [dynamixel,arduino]
+    return [dynamixel]
+    
 
 def serial_ports():
     """Lists serial ports
