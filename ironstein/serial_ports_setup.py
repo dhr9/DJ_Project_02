@@ -27,6 +27,7 @@ def find_dynamixel_and_arduino() :
 
     # return [dynamixel,arduino]
     return [dynamixel]
+    
 
 def serial_ports():
     """Lists serial ports
