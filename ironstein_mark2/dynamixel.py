@@ -47,6 +47,7 @@ def dyna_read(motor_id,goal_pos):
         return 1
     else:
         return 0
+        
 def write(motor_id,pos):
 
     def convert_to_two_bytes(n):
