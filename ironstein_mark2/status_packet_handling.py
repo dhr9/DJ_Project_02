@@ -69,26 +69,38 @@ def check_for_error(status_packet) :
 			error_byte_list.append((int(error_byte/(2**i)))&0x01)
 		return error_byte_list
 
-def error_service_routine(error_byte_list) : 
-	error = {
-	0 : 'INPUT VOLTAGE ERROR',
-	1 : 'ANGLE LIMIT ERROR',
-	2 : 'OVERHEATING ERROR',
-	3 : 'RANGE ERROR',
-	4 : 'CHECKSUM ERROR',
-	5 : 'OVERLOAD ERROR',
-	6 : 'INSTRUCTION ERROR',
-	7 : 'INVALID ERROR BYTE', 
-	}
-	error_message = ''
-	for i in range(len(error_byte_list)) : 
-		if(error_byte_list[i]) : 
-			error_message += '\n' + error.get(i)
-	print(error_message)
+def error_service_routine(error_byte_list,type = 0) : 
 
-status_packet = get_status_packet('\xff\xff\x02\x05\x03\x1e\x00\x00\xd7','\x03\x23\xff\xff\x02\x03\x03\x01\xf6\xa1\xb4')
-print_packet(status_packet)
+	if(type == 0) :
+	
+		error = {
+		0 : 'INPUT VOLTAGE ERROR',
+		1 : 'ANGLE LIMIT ERROR',
+		2 : 'OVERHEATING ERROR',
+		3 : 'RANGE ERROR',
+		4 : 'CHECKSUM ERROR',
+		5 : 'OVERLOAD ERROR',
+		6 : 'INSTRUCTION ERROR',
+		7 : 'INVALID ERROR BYTE', 
+		}
+		error_message = ''
+		for i in range(len(error_byte_list)) : 
+			if(error_byte_list[i]) : 
+				error_message += '\n' + error.get(i)
+		print(error_message)
 
-b = check_for_error(status_packet)
-print(b) 
-error_service_routine(b)
+	elif(type == 1) : 
+		error_message = 'USER DEFINED ERROR : '
+		error = {
+		1 : 'COMMUNICATION ERROR'
+		}
+		error_message += error.get(error_byte_list)
+		print(error_message)
+
+# status_packet = get_status_packet('\xff\xff\x02\x05\x03\x1e\x00\x00\xd7','\x03\x23\xff\xff\x02\x03\x03\x01\xf6\xa1\xb4')
+# print_packet(status_packet)
+
+# b = check_for_error(status_packet)
+# print(b) 
+# error_service_routine(b)
+# error_service_routine(1,type=1)
