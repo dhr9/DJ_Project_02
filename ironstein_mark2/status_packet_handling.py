@@ -16,8 +16,8 @@ def get_status_packet(instruction_packet,status_packet) :
 	number_of_parameters = char_to_int(status_packet[i+3]) - 2
 	error_byte = status_packet[i+4]
 	parameters = ''
-	for i in range(i+5,i+5+number_of_parameters) : 
-		parameters = status_packet[i]
+	for j in range(i+5,i+5+number_of_parameters) : 
+		parameters = status_packet[j]
 	checksum = status_packet[i+5+number_of_parameters]
 
 	return_status_packet = ''
@@ -86,8 +86,8 @@ def error_service_routine(error_byte_list) :
 			error_message += '\n' + error.get(i)
 	print(error_message)
 
-status_packet = get_status_packet('\xff\xff\x02\x05\x03\x1e\x00\x00\xd7','\x03\x23\xff\xff\x02\x03\x03\x00\xf7\xa1\xb4')
-print(status_packet)
+status_packet = get_status_packet('\xff\xff\x02\x05\x03\x1e\x00\x00\xd7','\x03\x23\xff\xff\x02\x03\x03\x01\xf6\xa1\xb4')
+print_packet(status_packet)
 
 b = check_for_error(status_packet)
 print(b) 
