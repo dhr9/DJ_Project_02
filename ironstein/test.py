@@ -14,7 +14,7 @@ def get_status_packet(instruction_packet,status_packet) :
 		if((status_packet[i] == common_string[0]) and \
 			(status_packet[i+1] == common_string[1]) and \
 			(status_packet[i+2] == common_string[2])) :
-			breaks
+			break
 
 	number_of_parameters = char_to_int(status_packet[i+3]) - 2
 	error_byte = status_packet[i+4]
@@ -40,8 +40,8 @@ def print_packet(packet) :
 				return i
 
 	for character in packet : 
-			print(hex(char_to_int(character)),end=' ')
-		print()
+			print(hex(char_to_int(character)))
+	print('\n')
 
 	# for character in packet : 
 	# 	print (hex(char_to_int(character))),

@@ -5,6 +5,7 @@ import time                              #import time liabrary to use the time.s
 import serial                            #import the serial library 
 import platform
 import serial_ports_setup
+import check_status_packet
 
 GO_TO_DYNA_1_POS=0
 GO_TO_DYNA_2_POS=0
@@ -13,14 +14,6 @@ watchdog = 10     #change later
 #arduino = ''
 dynamixel = ''
 system = ''
-
-'''to communicate with the dynamixel motor via the max485 ic , we need to set up a
-    virtual com port and create an instance of the serial.Serial class , so as to
-    use it to read data from and write data to the dynamixel
-        serial<id,open=(true/false)>(port = ?,baudrate = ?,bytesize = ?,parity = 'Y/N',
-    stopbits = ?,timeout = ?,xonxoff = (True/False),rtscts = (True/False),dsrdtr =
-    (True/False))
-'''
 
 def dyna_write():
     global GO_TO_DYNA_1_POS
@@ -136,9 +129,10 @@ def build_instruction_packet(motor_id,instruction,*args) :
 def send_instruction(motor_id,instruction,*args) :
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
     string = ''
-    for character in instruction_packet :
-        string += char_to_int(character)
-    print(chr(string),)
+    
+##    for character in instruction_packet :
+##        string += char_to_int(character)
+##    print(chr(string),)
 ##    arduino.write('w\0')
 ##    while(arduino.inWaiting() == 0) :
 ##        1 == 1
@@ -149,13 +143,21 @@ def send_instruction(motor_id,instruction,*args) :
 ##        print('correct data received')
 ##    else : 
 ##        print('wrong data received from arduino')
+
+    #print(list(instruction_packet))
+
     dynamixel.write(instruction_packet)
-    time.sleep(0.001)
+    time.sleep(0.01)
     status_packet = dynamixel.read(dynamixel.inWaiting())
-    if(check_status_packet(instruction_packet,status_packet)) : 
-        print('succesful') 
-    else : 
-        print('something went wrong')
+    status_packet = check_status_packet.get_status_packet(instruction_packet,status_packet)
+    if(status_packet != False) :
+        check_status_packet.print_packet(status_packet)
+    else :
+        print('incorrect statuss packet')
+    #if(check_status_packet(instruction_packet,status_packet)) : 
+    #    print('succesful') 
+    #else : 
+    #    print('something went wrong')
 
 def char_to_int(character) :
     for i in range(256) :
@@ -200,6 +202,14 @@ def setup_dynamixel_communication() :
 init()
 
 
+
+'''to communicate with the dynamixel motor via the max485 ic , we need to set up a
+    virtual com port and create an instance of the serial.Serial class , so as to
+    use it to read data from and write data to the dynamixel
+        serial<id,open=(true/false)>(port = ?,baudrate = ?,bytesize = ?,parity = 'Y/N',
+    stopbits = ?,timeout = ?,xonxoff = (True/False),rtscts = (True/False),dsrdtr =
+    (True/False))
+'''
 
 
 '''
