@@ -163,6 +163,7 @@ import time                              #import time liabrary to use the time.s
 import serial                            #import the serial library 
 import platform
 import serial_ports_setup
+from check_status_packet import check_status_packet
 
 def startup(com) :
     ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
@@ -171,7 +172,7 @@ def startup(com) :
     print(ser.baudrate)
     return ser
 
-arduino = ''
+#arduino = ''
 dynamixel = ''
 system = ''
 
@@ -197,12 +198,12 @@ def not_checksum(l) :
 	return not_checksum
 
 
-def rw(n) :
-    if(n == 'r') :
-        arduino.write('\x01')
-        arduino.write('w')
-    if(n == 'w') : 
-        arduino.write('r')
+##def rw(n) :
+##    if(n == 'r') :
+##        arduino.write('\x01')
+##        arduino.write('w')
+##    if(n == 'w') : 
+##        arduino.write('r')
 
 
 def instruction_length(instruction,*args) :
@@ -231,9 +232,9 @@ def build_instruction_packet(motor_id,instruction,*args) :
 def send_instruction(motor_id,instruction,*args) :
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
     string = ''
-    for character in instruction_packet :
-        string += char_to_int(character)
-    print(chr(string),end='')
+    print(instruction_packet)
+##    for character in instruction_packet :
+##        string += character
 ##    arduino.write('w\0')
 ##    while(arduino.inWaiting() == 0) :
 ##        1 == 1
@@ -247,12 +248,14 @@ def send_instruction(motor_id,instruction,*args) :
     dynamixel.write(instruction_packet)
     time.sleep(0.001)
     status_packet = dynamixel.read(dynamixel.inWaiting())
-    if(check_status_packet(instruction_packet,status_packet)) : 
-        print('succesful') 
+    if(status_packet == '') :
+        print('no status packet received')
     else : 
-        print('something went wrong')
-
-def check_status_packet() :
+        print(status_packet)
+        if(check_status_packet(instruction_packet,status_packet)) : 
+            print('succesful') 
+        else : 
+            print('something went wrong')
 
 def char_to_int(character) :
     for i in range(256) :
