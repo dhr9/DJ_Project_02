@@ -33,7 +33,6 @@ def send_and_check(motor_id,instruction,*args) :
 	
 	global send_and_check_limit
 	count = 0
-	status_packet = False
 
 	while(count < send_and_check_limit) :
 		dynamixel.write(instruction_packet)

@@ -7,64 +7,72 @@ import platform
 import serial_ports_setup
 import check_status_packet
 
+##---IMPORTANT GLOBAL VARIABLES---
 GO_TO_DYNA_1_POS=0
 GO_TO_DYNA_2_POS=0
 
-watchdog = 10     #change later
-#arduino = ''
+##---INITIALIZATION VARIABLES---
 dynamixel = ''
 system = ''
+#arduino = ''
 
-def dyna_write():
-    global GO_TO_DYNA_1_POS
-    global GO_TO_DYNA_2_POS
-    global watchdog
+##---LIMITING VARIABLES---
 
-    write(1,GO_TO_DYNA_1_POS)
-    write(2,GO_TO_DYNA_2_POS)
+watchdog = 10     #change later
 
-    print("moving to ",GO_TO_DYNA_1_POS,",",GO_TO_DYNA_2_POS)
-    for i in range(watchdog): 
-        check_bit = 0
-        check_bit += dyna_read(1,GO_TO_DYNA_1_POS)
-        check_bit += dyna_read(2,GO_TO_DYNA_2_POS)
-        time.sleep(0.001)
-        if(check_bit==2):
-            print("dyna reached in ",i," iterations")
-            break
-    if(check_bit!=2):
-        print("watchdogtimer overflowed")
-    else:
-        print("reached !")
 
-def dyna_read(motor_id,goal_pos):
-    value = read(motor_id,0x1e,2)
-    if(value==False):
-        return 0
-    else:
-        current_pos = value[1]*256 + value[0]
-    if(goal_pos==current_pos):
-        return 1
-    else:
-        return 0
-def write(motor_id,pos):
-    def convert_to_two_bytes(n):
-        return([int(n/256),int(n%256)])
+##def dyna_write():
+##    global GO_TO_DYNA_1_POS
+##    global GO_TO_DYNA_2_POS
+##    global watchdog
+##
+##    write(1,GO_TO_DYNA_1_POS)
+##    write(2,GO_TO_DYNA_2_POS)
+##
+##    print("moving to ",GO_TO_DYNA_1_POS,",",GO_TO_DYNA_2_POS)
+##    for i in range(watchdog): 
+##        check_bit = 0
+##        check_bit += dyna_read(1,GO_TO_DYNA_1_POS)
+##        check_bit += dyna_read(2,GO_TO_DYNA_2_POS)
+##        time.sleep(0.001)
+##        if(check_bit==2):
+##            print("dyna reached in ",i," iterations")
+##            break
+##    if(check_bit!=2):
+##        print("watchdogtimer overflowed")
+##    else:
+##        print("reached !")
+##
+##def dyna_read(motor_id,goal_pos):
+##    value = read(motor_id,0x1e,2)
+##    if(value==False):
+##        return 0
+##    else:
+##        current_pos = value[1]*256 + value[0]
+##    if(goal_pos==current_pos):
+##        return 1
+##    else:
+##        return 0
+##def write(motor_id,pos):
+##    def convert_to_two_bytes(n):
+##        return([int(n/256),int(n%256)])
+##
+##    [h_byte,l_byte] = convert_to_two_bytes(pos)     # any value from 
+##    check_bit = send_instruction(motor_id,3,0x1e,l_byte,h_byte)
+##    if(check_bit==1):
+##        return
+##    if(check_bit==0):
+##        print("oh shit...wrong check bit returned")
 
-    [h_byte,l_byte] = convert_to_two_bytes(pos)
-    check_bit = send_instruction(motor_id,3,0x1e,l_byte,h_byte)
-    if(check_bit==1):
-        return
-    if(check_bit==0):
-        print("oh shit...wrong check bit returned")
 
-def read(motor_id,location,no_of_bytes):
-    a = send_instruction(motor_id,2,location,no_of_bytes)
-    if(a==False):
-        print("read mein jhol hai")
-    else:
-        #print(a)
-        return a
+##def read(motor_id,location,no_of_bytes):
+##    a = send_instruction(motor_id,2,location,no_of_bytes)
+##    if(a==False):
+##        print("read mein jhol hai")
+##        r
+##    else:
+##        #print(a)
+##        return a
 
 def startup(com) :
     ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
@@ -94,15 +102,6 @@ def not_checksum(l) :
 	not_checksum = (~checksum)&0xff
 	return not_checksum
 
-
-def rw(n) :
-    if(n == 'r') :
-        arduino.write('\x01')
-        arduino.write('w')
-    if(n == 'w') : 
-        arduino.write('r')
-
-
 def instruction_length(instruction,*args) :
     instructions_that_require_parameters = [0x02,0x03,0x04]
     if(instruction in instructions_that_require_parameters) :
@@ -125,40 +124,44 @@ def build_instruction_packet(motor_id,instruction,*args) :
     #print (list(instruction_packet))
     return(instruction_packet)
 
+##
+##def send_and_check(motor_id,instruction,*args) :
+##    instruction_packet = build_instruction_packet(motor_id,instruction,*args)
+##
+##    dynamixel.write(instruction_packet)
+##    time.sleep(0.01)
+##    status_packet = dynamixel.read(dynamixel.inWaiting())
+##    status_packet = check_status_packet.get_status_packet(instruction_packet,status_packet)
+##    if(status_packet != False) :
+##        check_status_packet.print_packet(status_packet)
+##        return 1
+##    else :
+##        print('incorrect status packet')
+##        return 0
 
-def send_instruction(motor_id,instruction,*args) :
+
+def send_and_check(motor_id,instruction,*args) : 
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
-    string = ''
     
-##    for character in instruction_packet :
-##        string += char_to_int(character)
-##    print(chr(string),)
-##    arduino.write('w\0')
-##    while(arduino.inWaiting() == 0) :
-##        1 == 1
-##    data = arduino.read(arduino.inWaiting())
-##    #print(data)
-##    if(data == 'Q') : 
-##        dynamixel.write(instruction_packet)
-##        print('correct data received')
-##    else : 
-##        print('wrong data received from arduino')
+    global send_and_check_limit
+    count = 0
 
-    #print(list(instruction_packet))
+    while(count < send_and_check_limit) :
+        dynamixel.write(instruction_packet)
+        time.sleep(0.01)
+        status_packet = dynamixel.read(dynamixel.inWaiting())
+        status_packet = status_packet_handling.get_status_packet(instruction_packet,status_packet)
+        if(status_packet == False) :
+            count+=1
+        else:
+            error = check_for_error(status_packet) 
+            if(error == False) :
+                return status_packet
+            else:
+                status_packet_handling.error_service_routine(error)
+    return False
 
-    dynamixel.write(instruction_packet)
-    time.sleep(0.01)
-    status_packet = dynamixel.read(dynamixel.inWaiting())
-    status_packet = check_status_packet.get_status_packet(instruction_packet,status_packet)
-    if(status_packet != False) :
-        check_status_packet.print_packet(status_packet)
-    else :
-        print('incorrect statuss packet')
-    #if(check_status_packet(instruction_packet,status_packet)) : 
-    #    print('succesful') 
-    #else : 
-    #    print('something went wrong')
-
+    
 def char_to_int(character) :
     for i in range(256) :
         if(chr(i) == character) :
