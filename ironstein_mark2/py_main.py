@@ -1,5 +1,6 @@
 import lookup
 import dynamixel
+
 from debug import debug
 
 CURRENT_ARRAY_LENGTH = 0
