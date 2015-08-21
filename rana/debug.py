@@ -15,7 +15,7 @@ class debug() :
 
 
 class logs() : 
-	def __init__(self,*args,**kwargs) :
+	def __init__(self,*Args,**kwargs) :
 		self.args = args
 		print(self.args)
 
@@ -33,4 +33,4 @@ class logs() :
 # 			func(*args,**kwargs)
 # 			print('exiting ' + func.__name__)
 # 		return wrapper
-# 	return wrapper_functions
+# 	return wrapper_function
