@@ -79,3 +79,6 @@ def display_area_calc():
 	global DISPLAY_AREA_POSITIONS
 
 	DISPLAY_AREA_POSITIONS = [[23,32],[34,43],[45,54],[56,65],[67,76],[78,87],[89,98]]
+
+def check_if_blocks_out_of_place():
+	f=0
