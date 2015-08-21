@@ -83,11 +83,11 @@ def send_and_check(motor_id,instruction,*args) :
     count = 0
 
     while(count < send_and_check_limit) :
-        print(list(instruction_packet))
+#        print(list(instruction_packet))
         dynamixel.write(instruction_packet)
         time.sleep(0.05)
         status_packet = dynamixel.read(dynamixel.inWaiting())
-        print(list(status_packet))
+#        print(list(status_packet))
         status_packet = status_packet_handling.get_status_packet(instruction_packet,status_packet)
         if(status_packet == False) :
             count+=1
@@ -112,8 +112,8 @@ def dyna_move():
     # FUNCTION TO CONVERT ANGLES TO POSITIONS
 
     while(count < dyna_write_limit) :
-        position_write(1,GO_TO_DYNA_1_POS)#--------------------------->>>
-        #position_write(2,GO_TO_DYNA_2_POS)
+        #position_write(1,GO_TO_DYNA_1_POS)--------------------------->>>
+        position_write(2,GO_TO_DYNA_2_POS)
 
         reached = till_dyna_reached()
         if(reached == True):
@@ -179,11 +179,10 @@ def positon_read():
     global motor_1_offset
     global motor_2_offset
 
-    status_packet1 = send_and_check(1,2,30,2)#----------------------->>>
-    #status_packet1 = "\xff\xff\x01\x04\x00\x00\x00\xfa"
-    #status_packet2 = send_and_check(2,2,30,2)
-    status_packet2 = "\xff\xff\x02\x04\x00\x00\x00\xfb"
-    
+    #status_packet1 = send_and_check(1,2,30,2)----------------------->>>
+    status_packet1 = "\xff\xff\x01\x04\x00\x00\x00\xfa"
+    status_packet2 = send_and_check(2,2,30,2)
+
     if(not(status_packet1 and status_packet2)):
         print("Status Packet ERROR")
         return False
@@ -220,9 +219,9 @@ def position_write(motor_id,goal_pos) :
 
 
 init()
-##dyna_move()
-##GO_TO_DYNA_1_POS = 180
-##dyna_move()
+dyna_move()
+GO_TO_DYNA_2_POS = 180
+dyna_move()
 
 
 
