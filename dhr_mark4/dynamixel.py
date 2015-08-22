@@ -17,8 +17,8 @@ system = ''
 #arduino = ''
 
 #---DYNAMIXEL VARIABLES---
-motor_1_offset = 180
-motor_2_offset = 180
+motor_1_offset = 0
+motor_2_offset = 0
 
 ##---LIMITING VARIABLES---
 send_and_check_limit = 10
@@ -83,11 +83,11 @@ def send_and_check(motor_id,instruction,*args) :
     count = 0
 
     while(count < send_and_check_limit) :
-        #print(list(instruction_packet))
+        print(list(instruction_packet))
         dynamixel.write(instruction_packet)
         time.sleep(0.05)
         status_packet = dynamixel.read(dynamixel.inWaiting())
-        #print(list(status_packet))
+        print(list(status_packet))
         status_packet = status_packet_handling.get_status_packet(instruction_packet,status_packet)
         if(status_packet == False) :
             count+=1
@@ -112,6 +112,7 @@ def dyna_move():
     # FUNCTION TO CONVERT ANGLES TO POSITIONS
 
     while(count < dyna_write_limit) :
+        print("writing to dyna")
         #position_write(1,GO_TO_DYNA_1_POS)#--------------------------->>>
         position_write(2,GO_TO_DYNA_2_POS)
 
@@ -119,11 +120,13 @@ def dyna_move():
         if(reached == True):
             break
         elif(reached == "again"):
+            
             count +=1
         else:
             count +=1
             print("Somethings Wrong")
             print("Writing to dynamixel again")
+    print("dyna write limit reached")
 
 def till_dyna_reached() :
     global GO_TO_DYNA_1_POS
@@ -133,23 +136,29 @@ def till_dyna_reached() :
     count = 0
     stall_count = 0
     reqd_pos = [GO_TO_DYNA_1_POS,GO_TO_DYNA_2_POS]
-
-    current_pos = positon_read()
+    print("reqd pos = ",reqd_pos)
+    current_pos = position_read()
     last_pos = current_pos
 
     while(count < read_limit):
+        print("current pos = ",current_pos)
+        print("count = ",count)
+        print("stall_count = ",stall_count)
         if(current_pos == reqd_pos):
+            print("finally same aaya-> current_pos & reqd_pos")
             return True
         elif(current_pos == last_pos):
             if(stall_count < stall_count_limit) :
                 stall_count += 1
             else:
+                print("stall limit reached")
                 return "again"
         else:
             stall_count = 0
             last_pos = current_pos
+            print("reading again")
 
-        current_pos = positon_read()
+        current_pos = position_read()
         count +=1
     return False
 
@@ -166,16 +175,17 @@ def angle_from_status_packet(packet,offset) :
         angle /= 4096
         angle += offset
         angle %= 360
+        print(int(angle))
         return int(angle)
   
     number_of_parameters = char_to_int(packet[3]) - 2
     parameters = []
     for i in range(5,5+number_of_parameters) : 
         parameters.append(packet[i])
-
+    print("hex = ",parameters)
     return hex_to_angle(parameters[0],parameters[1],offset)
 
-def positon_read():
+def position_read():
     global motor_1_offset
     global motor_2_offset
 
@@ -183,7 +193,7 @@ def positon_read():
     status_packet1 = "\xff\xff\x01\x04\x00\x00\x00\xfa"
     status_packet2 = send_and_check(2,2,30,2)
     #status_packet2 = "\xff\xff\x02\x04\x00\x00\x00\xfb"
-    
+    print(status_packet2)
     if(not(status_packet1 and status_packet2)):
         print("Status Packet ERROR")
         return False
@@ -214,7 +224,7 @@ def position_write(motor_id,goal_pos) :
         return([(int(angle%256)),(int(angle/256))])
 
     [h_byte,l_byte] = angle_to_hex(goal_pos,offset)
-    #print([h_byte,l_byte])
+    print("writing motor ",motor_id," to :-",[h_byte,l_byte])
     send_and_check(motor_id,3,30,h_byte,l_byte)
 #-------------------------------------------------------------------
 
