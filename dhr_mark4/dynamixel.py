@@ -264,8 +264,10 @@ def store_in_list(angle):
 
     HYPER_LIST.append(angle)
 
+def pid(p,i,d):
+    send_and_check(2,3,26,d,i,p)
 
-send_and_check(2,3,27,8,64)
+pid(0,6,45)
 
 forloop()
 
