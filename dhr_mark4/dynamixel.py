@@ -174,13 +174,17 @@ def char_to_int(character) :
 
 
 def angle_from_status_packet(packet,offset) : 
+##    def hex_to_angle(position_low,position_high,offset):
+##        angle = (char_to_int(position_high))*256 + char_to_int(position_low)
+##        angle *= 360
+##        angle /= 4096
+##        angle += offset
+##        angle %= 360
+##        #print(int(angle))
+##        return int(angle)
+
     def hex_to_angle(position_low,position_high,offset):
         angle = (char_to_int(position_high))*256 + char_to_int(position_low)
-        angle *= 360
-        angle /= 4096
-        angle += offset
-        angle %= 360
-        #print(int(angle))
         return int(angle)
   
     number_of_parameters = char_to_int(packet[3]) - 2
