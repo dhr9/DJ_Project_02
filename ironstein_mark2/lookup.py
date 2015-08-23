@@ -7,7 +7,6 @@ DYNA_2_POS = 0
 #POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
 POSITION_ARRAY = []
 
-@debug()
 def lookup(letter,directive):
 	#directive = 0 for pick and 1 for place
 	###direction = 0 for fwd and 1 for bckwrd
@@ -22,11 +21,26 @@ def lookup(letter,directive):
 	else:	
 		LOOKUP_OUTPUT = [63,73,83]
 
-@debug()
 def sort(index,directive):
 	#directive needs to be local
 	global POSITION_ARRAY
 	global POSITION_KEY
+
+	def max_of_two(x,y):
+
+		def mod(s):
+			if (s<0):
+				s*=-1
+			return s                        #make positive
+	
+		global DYNA_1_POS
+		global DYNA_2_POS
+		a = mod(DYNA_1_POS - x)      	 #difference 1
+		b = mod(DYNA_2_POS - y)       	 #difference 2
+		if (a<b):
+			a=b                       	 #if b is greater
+		return a
+
 
 	# len_letters = len(POSITION_ARRAY)   #length of letters
 	no_of_instances = len(POSITION_ARRAY[index])
@@ -64,25 +78,9 @@ def sort(index,directive):
 	LOOKUP_OUTPUT[2] = POSITION_ARRAY[ index ][ i_min ][ j_min + 4 ]
 	POSITION_ARRAY[ index ][ i_min ][ 6 ] = directive
 
-#@debug()
-def max_of_two(x,y):
-	global DYNA_1_POS
-	global DYNA_2_POS
-	a = mod(DYNA_1_POS - x)      	 #difference 1
-	b = mod(DYNA_2_POS - y)       	 #difference 2
-	if (a<b):
-		a=b                       	 #if b is greater
-	return a
-
-#@debug()
-def mod(s):
-	if (s<0):
-		s*=-1
-	return s                        #make positive
 
 ########### RIYANSH CODES ##########
 
-@debug('init_lookup')
 def init_lookup() : 
 	logs = open('lookup.txt','r')
 	logs_ = logs.read()
@@ -90,7 +88,6 @@ def init_lookup() :
 	edit_position_array(logs_)
 	logs.close()
 
-@debug()
 def edit_position_array(logs) : 
 
 	character_array = []
@@ -170,7 +167,6 @@ def edit_position_array(logs) :
 	global POSITION_ARRAY 
 	POSITION_ARRAY = return_array
 
-@debug()
 def decode_array(array) : 
 	return_array = []
 	for i in range(len(array)) : 
@@ -195,6 +191,8 @@ def string_to_int(string) :
 	for i in range(len(string)) : 
 		num += (10**(len(string)-i-1))*int(string[i])
 	return num
+
+def change()
 
 ######### Initialization call #########
 
