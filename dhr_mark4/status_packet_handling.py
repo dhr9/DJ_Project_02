@@ -17,7 +17,7 @@ def get_status_packet(instruction_packet,status_packet) :
 	error_byte = status_packet[i+4]
 	parameters = ''
 	for j in range(i+5,i+5+number_of_parameters) : 
-		parameters = status_packet[j]
+		parameters += status_packet[j]
 	checksum = status_packet[i+5+number_of_parameters]
 
 	return_status_packet = ''
