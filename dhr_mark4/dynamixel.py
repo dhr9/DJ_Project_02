@@ -17,7 +17,7 @@ system = ''
 #arduino = ''
 
 #---DYNAMIXEL VARIABLES---
-motor_1_offset = 180
+motor_1_offset = 0
 motor_2_offset = 0
 
 ##---LIMITING VARIABLES---
@@ -139,7 +139,7 @@ def till_dyna_reached() :
     count = 0
     stall_count = 0
     reqd_pos = [GO_TO_DYNA_1_POS,GO_TO_DYNA_2_POS]
-    print("reqd pos   = ",reqd_pos)
+    #print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     current_pos = position_read()
     last_pos = current_pos
 
@@ -148,7 +148,7 @@ def till_dyna_reached() :
 ##        print("count = ",count)
 ##        print("stall_count = ",stall_count)
         if(current_pos == reqd_pos):
-            print("same aaya ------> current_pos & reqd_pos")
+ #           print("same aaya ------> current_pos & reqd_pos")#@@@@@@@@@@@@@@@@@@@@
             store_in_list(current_pos[1]) ######################
             return True
         elif(current_pos == last_pos):
@@ -156,7 +156,7 @@ def till_dyna_reached() :
                 stall_count += 1
             else:
                 #print("stall limit reached")#^^^^^^^^^^^^^^^^^^^^^^^^^^
-                print("current pos = ",current_pos)
+  #              print("current pos = ",current_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                 return "again"
         else:
             stall_count = 0
@@ -199,7 +199,7 @@ def position_read():
     global motor_2_offset
 
     #status_packet1 = send_and_check(1,2,30,2)#----------------------->>>
-    status_packet1 = "\xff\xff\x01\x04\x00\x00\x08\xf2"
+    status_packet1 = "\xff\xff\x01\x04\x00\x00\x00\xfa"
     status_packet2 = send_and_check(2,2,36,2)
     #status_packet2 = "\xff\xff\x02\x04\x00\x00\x00\xfb"
     #print(list(status_packet2))
@@ -220,18 +220,21 @@ def position_write(motor_id,goal_pos) :
     else:
         offset = motor_2_offset
 
-    def angle_to_hex(angle,offset):
-        if(angle == int(angle)) : 
-            if(angle%45 != 0) : 
-                angle += 0.1
-        angle += offset
-        angle %= 360
-        angle *= 4096
-        angle /= 360
-        angle %= 4096
-        angle = int(angle)
-        return([(int(angle%256)),(int(angle/256))])
+##    def angle_to_hex(angle,offset):
+##        if(angle == int(angle)) : 
+##            if(angle%45 != 0) : 
+##                angle += 0.1
+##        angle += offset
+##        angle %= 360
+##        angle *= 4096
+##        angle /= 360
+##        angle %= 4096
+##        angle = int(angle)
+##        return([(int(angle%256)),(int(angle/256))])
 
+    def angle_to_hex(angle,offset):
+        return [(int(angle%256)),(int(angle/256))]
+    
     [h_byte,l_byte] = angle_to_hex(goal_pos,offset)
     #print("writing motor ",motor_id," to :-",[h_byte,l_byte])
     send_and_check(motor_id,3,30,h_byte,l_byte)
@@ -248,22 +251,31 @@ init()
 ##dyna_move()
 ##move_to(180)
 
+HYPER_LIST = []
+
 def forloop():
-    for i in range(10):
+    global HYPER_LIST
+    for i in range(512):
         print("=========================="+str(i)+"=============================")
         move_to(i)
-
-HYPER_LIST = []
-    
+        
 def store_in_list(angle):
     global HYPER_LIST
 
     HYPER_LIST.append(angle)
 
-    
+
+send_and_check(2,3,27,8,64)
+
 forloop()
 
 print(HYPER_LIST)
+
+k=[]
+for i in range(512):
+	if(i not in HYPER_LIST):
+		k.append(i)
+print(k)		
 '''to communicate with the dynamixel motor via the max485 ic , we need to set up a
     virtual com port and create an instance of the serial.Serial class , so as to
     use it to read data from and write data to the dynamixel

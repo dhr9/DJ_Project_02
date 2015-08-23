@@ -82,7 +82,7 @@ def mod(s):
 
 ########### RIYANSH CODES ##########
 
-@debug('init_lookup')
+#@debug('init_lookup')
 def init_lookup() : 
 	logs = open('lookup.txt','r')
 	logs_ = logs.read()
@@ -90,7 +90,7 @@ def init_lookup() :
 	edit_position_array(logs_)
 	logs.close()
 
-@debug()
+#@debug()
 def edit_position_array(logs) : 
 
 	character_array = []
@@ -98,7 +98,7 @@ def edit_position_array(logs) :
 	i = 0
 	while(i < len(logs)) : 
 
-		skip_useless(logs,i)
+		i += skip_useless(logs,i)
 
 		if(logs[i] == '#') : 
 			i += skip_until_character(logs,'\n',i)
@@ -115,10 +115,12 @@ def edit_position_array(logs) :
 		i += 1
 
 		array.append(string)
-		if(i != len(logs)) : 
-			skip_useless(logs,i)
+		if(i < len(logs)) : 
+			i += skip_useless(logs,i)
 		else : 
 			break
+
+	# print(logs)
 
 	# now we have the array consisting of 
 	for i in range(len(array)) : 
@@ -170,7 +172,7 @@ def edit_position_array(logs) :
 	global POSITION_ARRAY 
 	POSITION_ARRAY = return_array
 
-@debug()
+#@debug()
 def decode_array(array) : 
 	return_array = []
 	for i in range(len(array)) : 

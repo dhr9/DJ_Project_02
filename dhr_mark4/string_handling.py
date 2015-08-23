@@ -17,13 +17,13 @@ def skip_until_character(string,character,i) :
 
 	return j-i
 
-useless_array = [' ','\n','\t']
+useless_array = [' ','\n','\t','%']
 def skip_useless(string,i) :
-	useless_array = []
+	#useless_array = []
 	j = i
-	while(string[j] in useless_array) : 
-		for k in range(len(useless_array)) : 
-			j += skip_character(string,useless_array[k],j)
+	while((j < len(string)) and (string[j] in useless_array)) : 
+		j += 1
+	return(j - i)
 
 def remove_useless(string) : 
 	i = 0
@@ -35,7 +35,8 @@ def remove_useless(string) :
 	return(return_string)
 
 def string_to_int(string) : 
-	num = 0
-	for i in range(len(string)) : 
-		num += (10**(len(string)-i-1))*int(string[i])
-	return num
+	return float(string)
+	# num = 0
+	# for i in range(len(string)) : 
+	# 	num += (10**(len(string)-i-1))*int(string[i])
+	# return num
