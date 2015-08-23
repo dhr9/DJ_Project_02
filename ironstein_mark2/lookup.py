@@ -1,6 +1,10 @@
 from debug import debug
 from string_handling import *
 
+import os
+working_directory = '/users/ironstein/documents/projects working directory/SCARA/DJ_Project_02/ironstein_mark2'
+os.chdir(working_directory)
+
 LOOKUP_OUTPUT = [0,0,0]
 DYNA_1_POS = 0
 DYNA_2_POS = 0
@@ -18,7 +22,7 @@ def lookup(letter,directive):
 	if (letter == "A"):
 		sort(0,directive)
 		# for A, index is 0
-	else:	
+	else:
 		LOOKUP_OUTPUT = [63,73,83]
 
 def sort(index,directive):
@@ -32,7 +36,7 @@ def sort(index,directive):
 			if (s<0):
 				s*=-1
 			return s                        #make positive
-	
+
 		global DYNA_1_POS
 		global DYNA_2_POS
 		a = mod(DYNA_1_POS - x)      	 #difference 1
@@ -45,7 +49,7 @@ def sort(index,directive):
 	# len_letters = len(POSITION_ARRAY)   #length of letters
 	no_of_instances = len(POSITION_ARRAY[index])
 	maximum = []
-	for i in range(no_of_instances*2) :  
+	for i in range(no_of_instances*2) :
 		maximum.append([])
 	#loop to find maximums
 	for i in range (no_of_instances):
@@ -63,7 +67,7 @@ def sort(index,directive):
 			else :
 				maximum[(2*i)+j] = 270
 				#max value possible
-	
+
 	# to find minimum
 	i_min = 0
 	j_min = 0
@@ -81,23 +85,25 @@ def sort(index,directive):
 
 ########### RIYANSH CODES ##########
 
-def init_lookup() : 
+def init_lookup() :
 	logs = open('lookup.txt','r')
 	logs_ = logs.read()
 	#print(logs_)
 	edit_position_array(logs_)
 	logs.close()
 
-def edit_position_array(logs) : 
+def edit_position_array(logs) :
 
 	character_array = []
 	array = []
 	i = 0
-	while(i < len(logs)) : 
+	while(i < len(logs)) :
 
-		skip_useless(logs,i)
+		i += skip_useless(logs,i)
 
-		if(logs[i] == '#') : 
+		if(logs[i] == 'eof') :
+			break
+		if(logs[i] == '#') :
 			i += skip_until_character(logs,'\n',i)
 			break
 
@@ -106,19 +112,19 @@ def edit_position_array(logs) :
 		i += 1
 
 		string = ''
-		while(logs[i] != '}') : 
-			string += logs[i] 
+		while(logs[i] != '}') :
+			string += logs[i]
 			i += 1
 		i += 1
 
 		array.append(string)
-		if(i != len(logs)) : 
-			skip_useless(logs,i)
-		else : 
+		if(i < len(logs)) :
+			i += skip_useless(logs,i)
+		else :
 			break
 
-	# now we have the array consisting of 
-	for i in range(len(array)) : 
+	# now we have the array consisting of
+	for i in range(len(array)) :
 		array[i] = remove_useless(array[i])
 
 
@@ -126,20 +132,20 @@ def edit_position_array(logs) :
 	#print(array)
 
 	return_array = []
-	for i in range(len(array)) : 
+	for i in range(len(array)) :
 		return_array.append([])
-		for j in range(len(array[i])) : 
+		for j in range(len(array[i])) :
 			return_array[i].append([])
 
 	#print(return_array)
 
-	for i in range(len(array)) : 
-		for j in range(len(array[i])) : 
+	for i in range(len(array)) :
+		for j in range(len(array[i])) :
 			#print(len(array[i][j]))
 			k = 0
-			while(k < len(array[i][j])) : 
+			while(k < len(array[i][j])) :
 				string = ''
-				while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) : 
+				while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) :
 					string += array[i][j][k]
 					k += 1
 					#print(k)
@@ -152,47 +158,42 @@ def edit_position_array(logs) :
 	array = return_array
 
 	return_array = []
-	for i in range(len(array)) : 
+	for i in range(len(array)) :
 		return_array.append([])
-		for j in range(len(array[i])) : 
+		for j in range(len(array[i])) :
 			return_array[i].append([])
 
-	for i in range(len(array)) : 
-		for j in range(len(array[i])) : 
-			for k in range(len(array[i][j])) : 
+	for i in range(len(array)) :
+		for j in range(len(array[i])) :
+			for k in range(len(array[i][j])) :
 				return_array[i][j].append(string_to_int(array[i][j][k]))
 
 	#print(return_array)
 
-	global POSITION_ARRAY 
+	global POSITION_ARRAY
 	POSITION_ARRAY = return_array
 
-def decode_array(array) : 
+def decode_array(array) :
 	return_array = []
-	for i in range(len(array)) : 
+	for i in range(len(array)) :
 		return_array.append([])
-	for i in range(len(array)) : 
+	for i in range(len(array)) :
 		j = 0
-		while(j < len(array[i])) : 
+		while(j < len(array[i])) :
 			skip_useless(array[i],j)
 			skip_character(array[i],',',j)
 			j += skip_until_character(array[i],'[',j)
 			j += 1
 			string = ''
-			while(array[i][j] != ']') : 
+			while(array[i][j] != ']') :
 				string += array[i][j]
 				j += 1
 			j += 1
 			return_array[i].append(string)
 	return(return_array)
 
-def string_to_int(string) : 
-	num = 0
-	for i in range(len(string)) : 
-		num += (10**(len(string)-i-1))*int(string[i])
-	return num
-
-def change()
+def string_to_int(string) :
+	return float(string)
 
 ######### Initialization call #########
 

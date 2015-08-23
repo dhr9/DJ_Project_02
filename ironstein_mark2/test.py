@@ -1,175 +1,59 @@
-class get_time() : 
+import os
+working_directory = '/users/ironstein/documents/projects working directory/SCARA/DJ_Project_02/ironstein_mark2'
+os.chdir(working_directory)
 
-<<<<<<< Updated upstream
-	def __init__(self) : 
-=======
-	def __init__(self) :
->>>>>>> Stashed changes
-		self.t = ''
-		self.year = ''
-		self.month = ''
-		self.day = ''
-		self.hour = ''
-		self.minute = ''
-		self.second = ''
-<<<<<<< Updated upstream
-		self.week_day = ''
-=======
-		self.day_of_week = ''
->>>>>>> Stashed changes
+def block_values(position_list) :
+	setup_position_log = open('values.txt','a')
+	setup_position_log.write(str(position_list))
+	setup_position_log.write('\n')
+	setup_position_log.close()
 
-		self.get_time()
-		self.__print__()
+class setup_position_log_to_lookup_txt() :
 
-	def __print__(self) : 
-		print('time : ',self.t)
-		print('year : ',self.year)
-<<<<<<< Updated upstream
-		print('month : ',self.month)
-		print('day : ',self.day)
-		print('hour : ',self.hour)
-		print('minute : ',self.minute)
-		print('second : ',self.second)
-		print('week_day : ',self.week_day)
+	def __init__(self,position_list) :
+		setup_position_log = open('block_values.txt','r')
+		self.position_log = []
+		for line in setup_position_log :
+			self.position_log.append(self.string_to_list(line))
+		setup_position_log.close()
 
-	def get_time(self) :
-		import time
+		lookup_list = []
+		for i in range(26) :
+			lookup_list.append([])
+		for i in range(len(self.position_log)) :
+			for j in range(len(position_list)):
+				if(i+1 in position_list[j]) :
+					lookup_list[j].append(self.position_log[i])
 
-		def get_before_and_after(string,after,before) : 
-			dont_need_character_list = [' ']
-			if((after in string) and (before in string)) : 
-				i = string.index(after) + len(after)
-				j = string.index(before,i,i+5)
-				return_string = ''
-				for k in range(i,j) : 
-					if(string[k] not in dont_need_character_list) :
-						return_string += string[k]
-				return return_string
-			else : 
-				print('before or after not in string') 
-
-		def char_to_int(character) : 
-			for i in range(256) : 
-				if(chr(i) == character) : 
-					return i
-
-		self.t = str(time.localtime())
-		self.year = get_before_and_after(self.t,'tm_year=',',')
-		self.month = get_before_and_after(self.t,'tm_mon=',',')
-		self.day = get_before_and_after(self.t,'tm_mday=',',')
-		self.hour = get_before_and_after(self.t,'tm_hour=',',')
-		self.minute = get_before_and_after(self.t,'tm_min=',',')
-		self.second = get_before_and_after(self.t,'tm_sec=',',')
-		self.week_day = get_before_and_after(self.t,'tm_wday=',',')
-		day = {
-			'0':'Mon',
-			'1':'Tue',
-			'2':'Wed',
-			'3':'Thu',
-			'4':'Fri',
-			'6':'Sat',
-			'7':'Sun'
-		}
-		month = {
-			'1':'Jan',
-			'2':'Feb',
-			'3':'Mar',
-			'4':'Apr',
-			'5':'May',
-			'6':'Jun',
-			'7':'Jul',
-			'8':'Aug',
-			'9':'Sep',
-			'10':'Aug',
-			'11':'Nov',
-			'12':'Dec'
-		}
-
-		self.week_day = day.get(self.week_day)
-		self.month = month.get(self.month)
-
-get_time()
+		lookup  = open('lookup.txt','w')
+		for i in range(len(lookup_list)) :
+			string = chr(i+97) + ' = {\n'
+			for j in range(len(lookup_list[i])) :
+				string += '	  ' + str(lookup_list[i][j]) + str(',\n')
+			string = string[:-2]
+			string += '\n'
+			string += '}\n'
+			lookup.write(string)
 
 
-# class rad_to_deg() : 
 
-# 	def __init__(self,function) : 
-# 		self.function = function
-# 		print('inside __init__')
+	def string_to_list(self,string) :
+		new_string = ''
+		for i in range(string.index('[')+1,string.index(']')) :
+			new_string += string[i]
+		list_ = new_string.split(',')
+		print(list_)
+		return_list = []
+		for i in range(len(list_)) :
+			return_list.append(self.string_to_number(list_[i]))
+		return return_list
 
-# 	def __call__(self,*args) : 
-# 		import math
-# 		deg = args[0]
-# 		rad = deg*(math.pi/180)
-# 		return self.function(rad)
+	def string_to_number(self,string) :
+		if('.' in string) :
+			return float(string)
+		return int(string)
 
-# import math
-
-# @rad_to_deg
-# def sin(theta) :
-# 	return(math.sin(theta))
-
-# print(sin(90))
-=======
-		print('month : ',self.month) 
-		print('day : ',self.day)
-		print('hour : ',self.hour)
-		print('minute : ',self.minute) 
-		print('second : ',self.second)
-		print('day_of_week : ',self.day_of_week)
-
-	def get_time(self) : 
-		import time
-		def get_value_before_and_after(string,after,before) : 
-			not_required_parameters = [' ']
-			if((after in string) and (before in string)) : 
-				i = string.index(after) + len(after)
-				j = string.index(before,i,i + 5)
-				return_string = ''
-				for k in range(i,j) : 
-					if(string[k] not in not_required_parameters) :
-						return_string += string[k]
-				return(return_string)
-			else : 
-				print('no such before of after string')
-
-		self.t = str(time.localtime())
-		self.year = get_value_before_and_after(self.t,'tm_year=',',')
-		self.month = get_value_before_and_after(self.t,'tm_mon=',',')
-		self.day = get_value_before_and_after(self.t,'tm_mday=',',')
-		self.hour = get_value_before_and_after(self.t,'tm_hour=',',')
-		self.minute = get_value_before_and_after(self.t,'tm_min=',',')
-		self.second = get_value_before_and_after(self.t,'tm_sec=',',')
-		self.day_of_week = get_value_before_and_after(self.t,'tm_wday=',',')
-
-		month = {
-		1 : 'Jan',
-		2 : 'Feb',
-		3 : 'Mar',
-		4 : 'Apr',
-		5 : 'May',
-		6 : 'Jun',
-		7 : 'Jul',
-		8 : 'Aug',
-		9 : 'Sep',
-		10 : 'Oct',
-		11 : 'Nov',
-		12 : 'Dec',
-		}
-		
-		day_of_week = {
-		0 : 'Mon',
-		1 : 'Tue',
-		2 : 'Wed',
-		3 : 'Thu',
-		4 : 'Fri',
-		5 : 'Sat',
-		6 : 'Sun',
-		}
-
-		self.month = month.get(self.month)
-		self.day_of_week = day_of_week.get(self.day_of_week)
-
-
-get_time()
->>>>>>> Stashed changes
+#a = setup_position_log_to_lookup_txt(1)
+#a.string_to_list('[1,2,3,4,5,12,34.5,4.233,6.4509]')
+position_list = [[1,23],[2,24],[3,25],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],[17],[18],[19],[20],[21],[22],[],[],[],[]]
+setup_position_log_to_lookup_txt(position_list)
