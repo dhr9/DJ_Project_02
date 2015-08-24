@@ -2,7 +2,7 @@ from debug import debug
 
 import time                              #import time liabrary to use the time.sleep()
                                          #function to generate delays
-import serial                            #import the serial library 
+import serial                            #import the serial library
 import platform
 import serial_ports_setup
 import check_status_packet
@@ -24,7 +24,7 @@ def dyna_write():
     write(2,GO_TO_DYNA_2_POS)
 
     print("moving to ",GO_TO_DYNA_1_POS,",",GO_TO_DYNA_2_POS)
-    for i in range(watchdog): 
+    for i in range(watchdog):
         check_bit = 0
         check_bit += dyna_read(1,GO_TO_DYNA_1_POS)
         check_bit += dyna_read(2,GO_TO_DYNA_2_POS)
@@ -47,7 +47,7 @@ def dyna_read(motor_id,goal_pos):
         return 1
     else:
         return 0
-        
+
 def write(motor_id,pos):
 
     def convert_to_two_bytes(n):
@@ -69,15 +69,15 @@ def read(motor_id,location,no_of_bytes):
         return a
 
 def startup(com) :
-    ser = serial.Serial(port = com)      #create an instance of the serial.Serial class 
+    ser = serial.Serial(port = com)      #create an instance of the serial.Serial class
     print(ser)
     ser.baudrate = 57600                 #set baudrate equal to 9600
     print(ser.baudrate)
     return ser
 
-def init() : 
+def init() :
 
-    global system 
+    global system
     global dynamixel
     # global arduino
 
@@ -91,7 +91,7 @@ def init() :
 
 def not_checksum(l) :
 	checksum = 0
-	for i in range(len(l)) : 
+	for i in range(len(l)) :
 		checksum += l[i]
 	not_checksum = (~checksum)&0xff
 	return not_checksum
@@ -103,7 +103,7 @@ def instruction_length(instruction,*args) :
     else :
         return 2
 
-def build_instruction_packet(motor_id,instruction,*args) : 
+def build_instruction_packet(motor_id,instruction,*args) :
     instructions_that_require_parameters = [0x02,0x03,0x04]
     instruction_length_ = instruction_length(instruction,*args)
     checksum = [motor_id,instruction_length_,instruction]
@@ -129,9 +129,9 @@ def send_instruction(motor_id,instruction,*args) :
         check_status_packet.print_packet(status_packet)
     else :
         print('incorrect statuss packet')
-    #if(check_status_packet(instruction_packet,status_packet)) : 
-    #    print('succesful') 
-    #else : 
+    #if(check_status_packet(instruction_packet,status_packet)) :
+    #    print('succesful')
+    #else :
     #    print('something went wrong')
 
 def char_to_int(character) :
@@ -154,7 +154,7 @@ def print_count() :
         count_ += 1
         count__ = 0
     print(str(count_) + '.' + str(count))
-        
+
 def setup_dynamixel_communication() :
     global count
     send_instruction(1,1)
@@ -194,16 +194,16 @@ the instruction packet for the dynamixel consists of 6 parts :
     part1) initialization :
         you need to tell the dynamixel that you are sending it an instruction packet
         for this , you need to send '0xFF' two times
-        
+
     part2) id of the motor :
         you need to specify the id of the motor in case that more than one motors are
         connected in daisy chain configuration .
         in our case, the two motors that we are using have id's 0x01 and 0x02
         but in general there can be maximum of 254 motors connected in daisy chain
-        
+
     part3) length of the packet :
         it is calculated as the number of parameters + 2
-        
+
     part4)instruction :
         this is the opcode of the instruction (in hexadecimal ofcourse)
         the following are the instructions that can be used with the dynamixel motors :
@@ -215,7 +215,7 @@ the instruction packet for the dynamixel consists of 6 parts :
                 READ_DATA (0x02) --> THIS COMMAND READS DATA FROM THE DYNAMIXEL
                 NUMBER OF PARAMETERS --> 2
                     PARAMETER1 ---> START ADDRESS OF DATA TO BE READ
-                    PARAMETER2 --> LENGTH OF DATA TO BE READ (IN BYTES) 
+                    PARAMETER2 --> LENGTH OF DATA TO BE READ (IN BYTES)
             instruction 3 :
                 WRITE_DATA(0x03) --> THIS COMMAND WRITES DATA TO DYNAMIXEL
                 NUMBER OF PARAMETERS --> 2 OR MORE
@@ -258,7 +258,7 @@ the instruction packet for the dynamixel consists of 6 parts :
                 (IN THE SYNC WRITE INSTRUCTION , THE LENGTH OF THE INSTRUCTION SHOULD
                  NOT EXCEED 143 BYTES , SINCE THE VOLUME OF THE RECEIVING BUFFER IS 143
                  BYTES )
-                
+
     part5)parameters :
         parameter is used when the instruction requires ancillary data
 
@@ -310,7 +310,7 @@ the dynamixel executes command received from the main controller and returns the
 
     part5)parameter :
         it is the data except the error
-        
+
     part6)checksum :
         it is used to check if the packet is damaged during communication
         checksum = ~(id + length + error + parameter1 + parameter2 + ...)
