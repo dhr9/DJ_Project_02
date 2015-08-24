@@ -10,6 +10,7 @@ DYNA_1_POS = 0
 DYNA_2_POS = 0
 #POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
 POSITION_ARRAY = []
+POSITION_ARRAY_FLAGS = []
 
 def lookup(letter,directive):
 	#directive = 0 for pick and 1 for place
@@ -171,7 +172,14 @@ def edit_position_array(logs) :
 	#print(return_array)
 
 	global POSITION_ARRAY
+	global POSITION_ARRAY_FLAGS
 	POSITION_ARRAY = return_array
+
+	for character in POSITION_ARRAY :
+		array = []
+		for element in character :
+			array.append(element.pop())
+		POSITION_ARRAY_FLAGS.append(array)
 
 def decode_array(array) :
 	return_array = []
@@ -199,3 +207,6 @@ def string_to_int(string) :
 
 init_lookup()
 print("Position array :- ",POSITION_ARRAY)
+print
+print("position array flags : ",POSITION_ARRAY_FLAGS)
+print
