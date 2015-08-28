@@ -1,11 +1,13 @@
 from debug import debug
 from string_handling import *
 
+
 LOOKUP_OUTPUT = [0,0,0]
 DYNA_1_POS = 0
 DYNA_2_POS = 0
 #POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
 POSITION_ARRAY = []
+POSITION_ARRAY_FLAGS = []
 
 @debug()
 def lookup(letter,directive):
@@ -79,6 +81,19 @@ def mod(s):
 	if (s<0):
 		s*=-1
 	return s                        #make positive
+
+######### ARRAY OPERATIONS ###########
+def change_array(array):
+	a = open("variable_array.txt","r")
+	k=[]
+	for line in a:
+		k.append(line)
+	print k
+	a.close()
+	k[0] = str(array)
+	print k
+	a = open("variable_array.txt","w")
+
 
 ########### RIYANSH CODES ##########
 
@@ -172,6 +187,13 @@ def edit_position_array(logs) :
 	global POSITION_ARRAY 
 	POSITION_ARRAY = return_array
 
+	global POSITION_ARRAY_FLAGS
+	for character in POSITION_ARRAY :
+		array = [] 
+		for element in character : 
+			array.append(element.pop())
+		POSITION_ARRAY_FLAGS.append(array)
+
 #@debug()
 def decode_array(array) : 
 	return_array = []
@@ -196,3 +218,7 @@ def decode_array(array) :
 
 init_lookup()
 print("Position array :- ",POSITION_ARRAY)
+print
+print('position array flags : ',POSITION_ARRAY_FLAGS)
+print
+change_array([[1,2]])

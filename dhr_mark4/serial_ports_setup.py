@@ -2,8 +2,10 @@ import sys
 import glob
 import serial
 import platform
+import inspect
 
-def find_dynamixel_and_arduino() : 
+def find_dynamixel_and_arduino() :
+
     system = platform.system()
     print(system)
     serial_ports_list = serial_ports()
@@ -11,23 +13,30 @@ def find_dynamixel_and_arduino() :
     print(serial_ports_list)
     dynamixel = ''
     arduino = ''
-    if(system.startswith('Darwin')) : 
-        for port in serial_ports_list : 
-            if(port.startswith('/dev/tty.usbserial')) : 
+    if(system.startswith('Darwin')) :
+        for port in serial_ports_list :
+            if(port.startswith('/dev/tty.usbserial')) :
                 dynamixel = port
-            elif(port.startswith('/dev/tty.usbmodem')) : 
-                arduino = port 
+            elif(port.startswith('/dev/tty.usbmodem')) :
+                arduino = port
     elif(system.startswith('Win')) :
         if(len(serial_ports_list) != 2):
             print("Connect Exactly two serial devices")
         dynamixel = 'com8'
         arduino = 'com3'
-    else : 
+    else :
         print('unsupported operating system')
 
     # return [dynamixel,arduino]
-    return [dynamixel]
-    
+    stack = inspect.stack()
+    print('checking stack')
+    if('dynamixel' in stack[1][1]) :
+        print('DYNAMIXEL \n\n')
+        return[dynamixel]
+    elif('arduino' in stack[1][1]) :
+        print('ARDUINO \n\n')
+        return[arduino]
+
 
 def serial_ports():
     """Lists serial ports

@@ -267,17 +267,27 @@ def store_in_list(angle):
 def pid(p,i,d):
     send_and_check(2,3,26,d,i,p)
 
-pid(0,6,45)
+##pid(0,6,45)
+##
+##forloop()
+##
+##print(HYPER_LIST)
+##
+##k=[]
+##for i in range(512):
+##	if(i not in HYPER_LIST):
+##		k.append(i)
+##print(k)		
 
-forloop()
+def send(motor_id,instruction,*args) :
+    instruction_packet = build_instruction_packet(motor_id,instruction,*args)
+    dynamixel.write(instruction_packet)
+    time.sleep(0.05)
+    status_packet = dynamixel.read(dynamixel.inWaiting())
+    print("raw status",list(status_packet))
 
-print(HYPER_LIST)
-
-k=[]
-for i in range(512):
-	if(i not in HYPER_LIST):
-		k.append(i)
-print(k)		
+def s(i,*args):
+    send(1,3,i,*args)
 '''to communicate with the dynamixel motor via the max485 ic , we need to set up a
     virtual com port and create an instance of the serial.Serial class , so as to
     use it to read data from and write data to the dynamixel
