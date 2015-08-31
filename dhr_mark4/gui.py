@@ -1,12 +1,12 @@
 import py_main
 
 def gui_main():
-	print("import complete")
-	print("khel shuru")
+	print("All Initializations successfully completed")
+
 	print(py_main.CURRENT_ARRAY_LENGTH)
 	print(py_main.CURRENT_ARRAY)
 
-	py_main.CURRENT_ARRAY = ['A','R','A','A']
+	py_main.CURRENT_ARRAY = ['O','K']
 
 	print(py_main.CURRENT_ARRAY_LENGTH)
 	print(py_main.CURRENT_ARRAY)

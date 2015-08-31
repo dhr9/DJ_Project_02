@@ -17,8 +17,8 @@ system = ''
 #arduino = ''
 
 #---DYNAMIXEL VARIABLES---
-motor_1_offset = 0
-motor_2_offset = -2048
+motor_1_offset = 2048
+motor_2_offset = 2048
 
 ##---LIMITING VARIABLES---
 send_and_check_limit = 10
@@ -145,8 +145,8 @@ def till_dyna_reached() :
     global read_limit
     count = 0
     stall_count = 0
-    reqd_pos = [GO_TO_DYNA_1_POS,GO_TO_DYNA_2_POS]
-#    print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    reqd_pos = [GO_TO_DYNA_1_POS%4096,GO_TO_DYNA_2_POS%4096]
+##    print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     current_pos = position_read()
     last_pos = current_pos
 
@@ -225,8 +225,8 @@ def angle_from_status_packet(packet,offset) :
 
     def hex_to_angle(position_low,position_high,offset):
         angle = (char_to_int(position_high))*256 + char_to_int(position_low)
-##        angle = -angle
-##        angle += offset
+        angle = -angle
+        angle += offset
         angle = angle%4096
         return int(angle)
     #print(list(packet))
@@ -276,8 +276,8 @@ def position_write(motor_id,goal_pos) :
 ##        return([(int(angle%256)),(int(angle/256))])
 
     def angle_to_hex(angle,offset):
-##        angle = -angle
-##        angle = angle + offset
+        angle = -angle
+        angle = angle + offset
         angle = angle%4096
         return [(int(angle%256)),(int(angle/256))]
 

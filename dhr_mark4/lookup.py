@@ -9,6 +9,8 @@ DYNA_2_POS = 0
 POSITION_ARRAY = []
 POSITION_ARRAY_FLAGS = []
 
+max_scalable_area = 3072
+
 @debug()
 def lookup(letter,directive):
 	#directive = 0 for pick and 1 for place
@@ -21,8 +23,12 @@ def lookup(letter,directive):
 	if (letter == "A"):
 		sort(0,directive)
 		# for A, index is 0
-	else:	
-		LOOKUP_OUTPUT = [63,73,83]
+	if (letter == "K"):
+		sort(1,directive)
+	if (letter == "O"):
+		sort(2,directive)
+	if (letter == "S"):
+		sort(3,directive)
 
 @debug()
 def sort(index,directive):
@@ -38,7 +44,7 @@ def sort(index,directive):
 	#loop to find maximums
 	for i in range (no_of_instances):
 		for j in range (2):
-			if ( POSITION_ARRAY[ index ][ i ][ 6 ] != directive ):
+			if ( POSITION_ARRAY_FLAGS[ index ][ i ] != directive ):
 				#checking availability
 
 				#print("i = ",i," j = ",j)
@@ -49,7 +55,7 @@ def sort(index,directive):
 				#print("max[",(2*i)+j,"] = ",maximum[(2*i)+j])
 
 			else :
-				maximum[(2*i)+j] = 270
+				maximum[(2*i)+j] = max_scalable_area
 				#max value possible
 	
 	# to find minimum
@@ -64,7 +70,8 @@ def sort(index,directive):
 	LOOKUP_OUTPUT[0] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) ]
 	LOOKUP_OUTPUT[1] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) + 1 ]
 	LOOKUP_OUTPUT[2] = POSITION_ARRAY[ index ][ i_min ][ j_min + 4 ]
-	POSITION_ARRAY[ index ][ i_min ][ 6 ] = directive
+	POSITION_ARRAY_FLAGS[ index ][ i_min ] = directive
+	change_array(POSITION_ARRAY_FLAGS,0)
 
 #@debug()
 def max_of_two(x,y):
@@ -83,18 +90,22 @@ def mod(s):
 	return s                        #make positive
 
 ######### ARRAY OPERATIONS ###########
-def change_array(array):
+def change_array(array,num):
+	#num=0 ==> POSITION_ARRAY_FLAGS
+	#num=1 ==> DISPLAY_AREA_POSITIONS
 	a = open("variable_array.txt","r")
 	k=[]
 	for line in a:
 		k.append(line)
-	print k
 	a.close()
-	k[0] = str(array)
-	print k
+	s = str(array)
+	if(num != len(k)-1):
+		s += '\n'
+	k[num] = s
 	a = open("variable_array.txt","w")
-
-
+	for i in range(len(k)):
+		a.write(k[i])
+	a.close()
 ########### RIYANSH CODES ##########
 
 #@debug('init_lookup')
@@ -221,4 +232,4 @@ print("Position array :- ",POSITION_ARRAY)
 print
 print('position array flags : ',POSITION_ARRAY_FLAGS)
 print
-change_array([[1,2]])
+change_array(POSITION_ARRAY_FLAGS,0)
