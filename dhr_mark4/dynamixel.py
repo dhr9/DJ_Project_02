@@ -18,7 +18,7 @@ system = ''
 
 #---DYNAMIXEL VARIABLES---
 motor_1_offset = 0
-motor_2_offset = 0
+motor_2_offset = -2048
 
 ##---LIMITING VARIABLES---
 send_and_check_limit = 10
@@ -46,6 +46,7 @@ def init() :
     # print('arduino : ',arduino)
     dynamixel = startup(dynamixel)
     # arduino = startup(arduino)
+    dynamixel_initializations()
 
 def not_checksum(l) :
     checksum = 0
@@ -90,12 +91,15 @@ def send_and_check(motor_id,instruction,*args) :
         #print("raw status",list(status_packet))
         status_packet = status_packet_handling.get_status_packet(instruction_packet,status_packet)
         if(status_packet == False) :
-            print("decoded status => FALSE")
+         #   print("decoded status => FALSE")
             count+=1
+        elif(status_packet == True):
+            return True
         else:
-            #print("decoded status",list(status_packet))
-            error = status_packet_handling.check_for_error(status_packet) 
+          #  print("decoded status",list(status_packet))
+            error = status_packet_handling.check_for_error(status_packet)
             if(error == False) :
+           #     print("error packet => FALSE")
                 return status_packet
             else:
                 status_packet_handling.error_service_routine(error)
@@ -114,10 +118,10 @@ def dyna_move():
     # FUNCTION TO CONVERT ANGLES TO POSITIONS
 
     while(count < dyna_write_limit) :
-        #print("writing to dyna")#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        #position_write(1,GO_TO_DYNA_1_POS)#--------------------------->>>
+     #   print("writing to dyna")#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        position_write(1,GO_TO_DYNA_1_POS)#--------------------------->>>
         position_write(2,GO_TO_DYNA_2_POS)
-
+      #  print("starting read procedure_______________")
         reached = till_dyna_reached()
         if(reached == True):
             break
@@ -131,7 +135,10 @@ def dyna_move():
     if(count==dyna_write_limit):
         print("dyna write limit reached")
 
+RANDOM_LIST = []
+
 def till_dyna_reached() :
+    global RANDOM_LIST #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     global GO_TO_DYNA_1_POS
     global GO_TO_DYNA_2_POS
 
@@ -139,24 +146,38 @@ def till_dyna_reached() :
     count = 0
     stall_count = 0
     reqd_pos = [GO_TO_DYNA_1_POS,GO_TO_DYNA_2_POS]
-    #print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#    print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     current_pos = position_read()
     last_pos = current_pos
 
+    def compare(current,reqd):
+        max_diff=0
+        current[0] = reqd[0]     ## COMMENT when dynamixel 1 works
+        l = zip(current,reqd)
+        def mod(s):
+            if(s<0):s*=-1
+            return s
+        
+        for element in l:
+            if(mod(element[0]-element[1])> max_diff):
+                return False
+        return True
+    
     while(count < read_limit):
 ##        print("current pos = ",current_pos)
 ##        print("count = ",count)
 ##        print("stall_count = ",stall_count)
-        if(current_pos == reqd_pos):
- #           print("same aaya ------> current_pos & reqd_pos")#@@@@@@@@@@@@@@@@@@@@
-            store_in_list(current_pos[1]) ######################
+##        
+        if(compare(current_pos,reqd_pos)):
+           # print("same aaya ------> current_pos & reqd_pos")#@@@@@@@@@@@@@@@@@@@@
+           # store_in_list(current_pos[1]) ######################
             return True
         elif(current_pos == last_pos):
             if(stall_count < stall_count_limit) :
                 stall_count += 1
             else:
                 #print("stall limit reached")#^^^^^^^^^^^^^^^^^^^^^^^^^^
-  #              print("current pos = ",current_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+     #           print("current pos = ",current_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                 return "again"
         else:
             stall_count = 0
@@ -166,6 +187,25 @@ def till_dyna_reached() :
         current_pos = position_read()
         count +=1
     return False
+
+##def till_dyna_reached() :
+##    global RANDOM_LIST #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+##    global GO_TO_DYNA_1_POS
+##    global GO_TO_DYNA_2_POS
+##
+##    global read_limit
+##    count = 0
+##    stall_count = 0
+##    reqd_pos = [GO_TO_DYNA_1_POS,GO_TO_DYNA_2_POS]
+##    #print("reqd pos   = ",reqd_pos)#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+##    current_pos = position_read()
+##    last_pos = current_pos
+##
+##    while(count < read_limit):
+##        current_pos = position_read()
+##        RANDOM_LIST.append(current_pos)
+##        count +=1
+##    return True
 
 def char_to_int(character) : 
     for i in range(256) : 
@@ -185,8 +225,11 @@ def angle_from_status_packet(packet,offset) :
 
     def hex_to_angle(position_low,position_high,offset):
         angle = (char_to_int(position_high))*256 + char_to_int(position_low)
+##        angle = -angle
+##        angle += offset
+        angle = angle%4096
         return int(angle)
-  
+    #print(list(packet))
     number_of_parameters = char_to_int(packet[3]) - 2
     parameters = []
     for i in range(5,5+number_of_parameters) : 
@@ -233,29 +276,31 @@ def position_write(motor_id,goal_pos) :
 ##        return([(int(angle%256)),(int(angle/256))])
 
     def angle_to_hex(angle,offset):
+##        angle = -angle
+##        angle = angle + offset
+        angle = angle%4096
         return [(int(angle%256)),(int(angle/256))]
-    
+
     [h_byte,l_byte] = angle_to_hex(goal_pos,offset)
     #print("writing motor ",motor_id," to :-",[h_byte,l_byte])
     send_and_check(motor_id,3,30,h_byte,l_byte)
 
-def move_to(angle):
-    global GO_TO_DYNA_2_POS
+def dynamixel_initializations():
+    send_and_check(1,3,26,8,8,48)   #PID for motor 1
+    send_and_check(2,3,26,8,8,48)   #PID for motor 2
     
-    GO_TO_DYNA_2_POS = angle
-    dyna_move()
 #-------------------------------------------------------------------
 
 
 init()
-##dyna_move()
+dyna_move()
 ##move_to(180)
 
 HYPER_LIST = []
 
 def forloop():
-    global HYPER_LIST
-    for i in range(512):
+    pid(48,8,8)
+    for i in range(0,4096):
         print("=========================="+str(i)+"=============================")
         move_to(i)
         
@@ -267,17 +312,41 @@ def store_in_list(angle):
 def pid(p,i,d):
     send_and_check(2,3,26,d,i,p)
 
+    #k()#~~~~~~~~~~~~~~~~~!!!!!!!!@@@@@@@@@@#########!!!!!!!!!!!!!!
+
 ##pid(0,6,45)
-##
+
 ##forloop()
 ##
 ##print(HYPER_LIST)
-##
+
 ##k=[]
 ##for i in range(512):
 ##	if(i not in HYPER_LIST):
 ##		k.append(i)
 ##print(k)		
+
+##def move_to(angle):
+##    global GO_TO_DYNA_2_POS
+##    
+##    GO_TO_DYNA_2_POS = angle
+##    dyna_move()
+
+##def move_to(angle2,angle1=False):
+##    global GO_TO_DYNA_1_POS
+##    global GO_TO_DYNA_2_POS
+##
+##    if not angle1:GO_TO_DYNA_1_POS = angle1
+##    GO_TO_DYNA_2_POS = angle2
+##    dyna_move()
+
+def move_to(angle2,angle1):
+    global GO_TO_DYNA_1_POS
+    global GO_TO_DYNA_2_POS
+
+    GO_TO_DYNA_1_POS = angle1
+    GO_TO_DYNA_2_POS = angle2
+    dyna_move()
 
 def send(motor_id,instruction,*args) :
     instruction_packet = build_instruction_packet(motor_id,instruction,*args)
@@ -288,6 +357,22 @@ def send(motor_id,instruction,*args) :
 
 def s(i,*args):
     send(1,3,i,*args)
+
+RANDOM_LIST_2 = []
+
+def k(a):
+    global RANDOM_LIST
+    global RANDOM_LIST_2
+
+    RANDOM_LIST = []
+    
+    pid(48,8,8)
+    move_to(a)
+    f = [y for x,y in RANDOM_LIST]
+    RANDOM_LIST_2.append(f)
+
+#------------------------------------------------------------
+
 '''to communicate with the dynamixel motor via the max485 ic , we need to set up a
     virtual com port and create an instance of the serial.Serial class , so as to
     use it to read data from and write data to the dynamixel
