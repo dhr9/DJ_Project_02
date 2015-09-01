@@ -1,11 +1,15 @@
 from debug import debug
 from string_handling import *
 
+
 LOOKUP_OUTPUT = [0,0,0]
 DYNA_1_POS = 0
 DYNA_2_POS = 0
 #POSITION_ARRAY = [[[-15,-105,-15,-105,38,83,1],[-60,80,2,-40,48,84,1],[80,-92,-2,85,58,85,1]]]
 POSITION_ARRAY = []
+POSITION_ARRAY_FLAGS = []
+
+max_scalable_area = 3072
 
 @debug()
 def lookup(letter,directive):
@@ -19,8 +23,12 @@ def lookup(letter,directive):
 	if (letter == "A"):
 		sort(0,directive)
 		# for A, index is 0
-	else:	
-		LOOKUP_OUTPUT = [63,73,83]
+	if (letter == "K"):
+		sort(1,directive)
+	if (letter == "O"):
+		sort(2,directive)
+	if (letter == "S"):
+		sort(3,directive)
 
 @debug()
 def sort(index,directive):
@@ -36,7 +44,7 @@ def sort(index,directive):
 	#loop to find maximums
 	for i in range (no_of_instances):
 		for j in range (2):
-			if ( POSITION_ARRAY[ index ][ i ][ 6 ] != directive ):
+			if ( POSITION_ARRAY_FLAGS[ index ][ i ] != directive ):
 				#checking availability
 
 				#print("i = ",i," j = ",j)
@@ -47,7 +55,7 @@ def sort(index,directive):
 				#print("max[",(2*i)+j,"] = ",maximum[(2*i)+j])
 
 			else :
-				maximum[(2*i)+j] = 270
+				maximum[(2*i)+j] = max_scalable_area
 				#max value possible
 	
 	# to find minimum
@@ -62,7 +70,8 @@ def sort(index,directive):
 	LOOKUP_OUTPUT[0] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) ]
 	LOOKUP_OUTPUT[1] = POSITION_ARRAY[ index ][ i_min ][ (2*j_min) + 1 ]
 	LOOKUP_OUTPUT[2] = POSITION_ARRAY[ index ][ i_min ][ j_min + 4 ]
-	POSITION_ARRAY[ index ][ i_min ][ 6 ] = directive
+	POSITION_ARRAY_FLAGS[ index ][ i_min ] = directive
+	change_array(POSITION_ARRAY_FLAGS,0)
 
 #@debug()
 def max_of_two(x,y):
@@ -80,6 +89,23 @@ def mod(s):
 		s*=-1
 	return s                        #make positive
 
+######### ARRAY OPERATIONS ###########
+def change_array(array,num):
+	#num=0 ==> POSITION_ARRAY_FLAGS
+	#num=1 ==> DISPLAY_AREA_POSITIONS
+	a = open("variable_array.txt","r")
+	k=[]
+	for line in a:
+		k.append(line)
+	a.close()
+	s = str(array)
+	if(num != len(k)-1):
+		s += '\n'
+	k[num] = s
+	a = open("variable_array.txt","w")
+	for i in range(len(k)):
+		a.write(k[i])
+	a.close()
 ########### RIYANSH CODES ##########
 
 #@debug('init_lookup')
@@ -172,6 +198,13 @@ def edit_position_array(logs) :
 	global POSITION_ARRAY 
 	POSITION_ARRAY = return_array
 
+	global POSITION_ARRAY_FLAGS
+	for character in POSITION_ARRAY :
+		array = [] 
+		for element in character : 
+			array.append(element.pop())
+		POSITION_ARRAY_FLAGS.append(array)
+
 #@debug()
 def decode_array(array) : 
 	return_array = []
@@ -196,3 +229,7 @@ def decode_array(array) :
 
 init_lookup()
 print("Position array :- ",POSITION_ARRAY)
+print
+print('position array flags : ',POSITION_ARRAY_FLAGS)
+print
+change_array(POSITION_ARRAY_FLAGS,0)

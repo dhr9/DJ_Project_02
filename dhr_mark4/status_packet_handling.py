@@ -1,7 +1,8 @@
 from string_handling import char_to_int
 
 def get_status_packet(instruction_packet,status_packet) : 
-
+        if(instruction_packet[2] == '\x01'):     ## COMMENT when dynamixel 1 works
+                return True                      ##   ----- u ------
 	common_string = ''
 	for i in range(3) : 
 		common_string += instruction_packet[i]
@@ -26,8 +27,7 @@ def get_status_packet(instruction_packet,status_packet) :
 	return_status_packet += error_byte
 	return_status_packet += parameters
 	return_status_packet += checksum
-
-	if(check_checksum(return_status_packet)) : 
+        if(check_checksum(return_status_packet)) : 
 		return return_status_packet
 	return False
 

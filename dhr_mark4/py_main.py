@@ -1,5 +1,7 @@
 import lookup
 import dynamixel
+import time
+#import arduino
 
 from debug import debug
 
@@ -25,29 +27,35 @@ def modify_blocks():
 		# print("DYNA_1_POS = ",lookup.DYNA_1_POS)
 		# print("DYNA_2_POS = ",lookup.DYNA_2_POS)
 		#--------------- PICK FORWARD --------------------------
-		print("Picking ",CURRENT_ARRAY[i]," from trash")
+		print("Picking ",CURRENT_ARRAY[i]," from arena")
 		lookup.lookup(CURRENT_ARRAY[i],0)
 		# # eg:- "A",pick
 		# print("LOOKUP_OUTPUT = ",lookup.LOOKUP_OUTPUT)
 		dynamixel.GO_TO_DYNA_1_POS = lookup.LOOKUP_OUTPUT[0]
 		dynamixel.GO_TO_DYNA_2_POS = lookup.LOOKUP_OUTPUT[1]
-		dynamixel.dyna_write()
+		dynamixel.dyna_move()
 		lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
 		lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+		#arduino.pick(LOOKUP_OUTPUT[2])
+		
 		# print("DYNA_1_POS = ",lookup.DYNA_1_POS)
 		# print("DYNA_2_POS = ",lookup.DYNA_2_POS)
 		# print("----")
 		#-------------------------------------------------------
+		time.sleep(3)
 		print("----")
 		#---------------- PLACE FORWARD ------------------------
 		print("Placing ",CURRENT_ARRAY[i]," on display area")
 		dynamixel.GO_TO_DYNA_1_POS = DISPLAY_AREA_POSITIONS[i][0]
 		dynamixel.GO_TO_DYNA_2_POS = DISPLAY_AREA_POSITIONS[i][1]
-		dynamixel.dyna_write()
+		dynamixel.dyna_move()
 		lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
 		lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+		#arduino.place(DISPLAY_AREA_something)
+		
 		#-------------------------------------------------------
 		print("-----------------")
+		time.sleep(3)
 	print("wait thoda...\nwait thoda...\nwait thoda...")
 	print("-----------------")
 	for k in range (CURRENT_ARRAY_LENGTH):
@@ -56,21 +64,27 @@ def modify_blocks():
 		print("Picking ",CURRENT_ARRAY[i]," from display area")
 		dynamixel.GO_TO_DYNA_1_POS = DISPLAY_AREA_POSITIONS[i][0]
 		dynamixel.GO_TO_DYNA_2_POS = DISPLAY_AREA_POSITIONS[i][1]
-		dynamixel.dyna_write()
+		dynamixel.dyna_move()
 		lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
 		lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+		#arduino.pick(DISPLAY_AREA_something)
+		
 		#-------------------------------------------------------
+		time.sleep(3)
 		print("----")
 		#--------------- PLACE REVERSE --------------------------
-		print("Placing ",CURRENT_ARRAY[i]," in trash")
+		print("Placing ",CURRENT_ARRAY[i]," in arena")
 		lookup.lookup(CURRENT_ARRAY[i],1)
 		dynamixel.GO_TO_DYNA_1_POS = lookup.LOOKUP_OUTPUT[0]
 		dynamixel.GO_TO_DYNA_2_POS = lookup.LOOKUP_OUTPUT[1]
-		dynamixel.dyna_write()
+		dynamixel.dyna_move()
 		lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
 		lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+		#arduino.place(LOOKUP_OUTPUT[2])
+		
 		#-------------------------------------------------------
 		print("-----------------")
+		time.sleep(3)
 	print("bring it on")
 
 @debug()

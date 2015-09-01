@@ -22,7 +22,7 @@ def find_dynamixel_and_arduino() :
     elif(system.startswith('Win')) :
         if(len(serial_ports_list) != 2):
             print("Connect Exactly two serial devices")
-        dynamixel = 'com8'
+        dynamixel = 'com4'
         arduino = 'com3'
     else :
         print('unsupported operating system')
