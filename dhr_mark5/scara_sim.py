@@ -6,9 +6,16 @@ parameter_list = [0,1,1,2,3,5,8,13,21,34]*2
 
 print(parameter_list)
 
-OCCURENCE_LIST = [4, 2, 1, 1, 3, 1, 1, 2, 3, 1, 1, 2, 2,\
-                  3, 4, 1, 1, 3, 3, 3, 1, 1, 1, 1, 1, 1]
+OCCURENCE_LIST = []
 max_length = 10
+
+def init_scara_sim():
+    global OCCURENCE_LIST
+
+    p = py_main.lookup.POSITION_ARRAY_FLAGS
+
+    for i in range(len(p)):
+        OCCURENCE_LIST.append(p[i].count(1))
 
 def default_values(gui_object):
     print parameter_list
@@ -26,7 +33,7 @@ def check_string(text):
     if(len(text) > max_length):
         return False
     g=[]
-    for i in range(26):
+    for i in range(len(OCCURENCE_LIST)):
         g.append(text.count(chr(i+65)))
 ##    print g
 ##    print OCCURENCE_LIST
@@ -54,30 +61,4 @@ def called_by_GUI(obj,progress_page,string):
     print("trying to open button")
     print("returning control")
 
-
-
-##def called_by_GUI(obj,progress_page,string):
-##    print("receiving controool")
-##    #'call write function'
-##    global FLAG
-##    global_string=''
-##    #obj.close_button()
-##    print(string)
-##    print(len(string))
-##    FLAG = False
-##    for i in range(len(string)):
-##        if(FLAG):
-##            print 'interrupted flag status in scara_sim--> called_by_GUI'
-##            break
-##        modify_blocks()
-##        print('SUCCESS--> '+string[i]+'\n')
-##        global_string+=string[i]+'....'
-##        obj.update_label(global_string)
-##        #obj.but.config(state=obj.NORMAL)
-##        #delay:tanik sustaye lo do second ke liye
-##        
-##        time.sleep(2)
-##    FLAG = True
-##    obj.deiconify()
-##    progress_page.destroy()
-##    print("trying to open button")
+init_scara_sim()

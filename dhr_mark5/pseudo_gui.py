@@ -3,10 +3,6 @@ import tkMessageBox
 import scara_sim as scara
 
 
-
-
-
-
 class Application(tk.Frame):
     
     def __init__(self):
@@ -101,9 +97,7 @@ class RUN(tk.Toplevel):
         self.destroy()
         self.master.deiconify()
    
-        
-
-    
+            
 def main():
     
     Application().mainloop()

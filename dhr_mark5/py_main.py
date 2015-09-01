@@ -1,56 +1,127 @@
+import lookup
+import dynamixel
 import time
+#import arduino
 
+from debug import debug
+
+CURRENT_ARRAY_LENGTH = 0
 CURRENT_ARRAY = []
+DISPLAY_AREA_POSITIONS = []
 FLAG = False
 
+@debug()
 def modify_blocks(obj):
-    global FLAG
+    global CURRENT_ARRAY_LENGTH
     global CURRENT_ARRAY
-    
-    print("entering modify blocks")
+    global DISPLAY_AREA_POSITIONS
+    global FLAG
+
+    CURRENT_ARRAY_LENGTH = len(CURRENT_ARRAY)
     global_string = ''
     string = CURRENT_ARRAY
     FLAG = False
-    for i in range(len(CURRENT_ARRAY)):
+
+    display_area_calc()
+
+    print(CURRENT_ARRAY_LENGTH)
+    print("-----------------")
+    for i in range (CURRENT_ARRAY_LENGTH):
         if(CURRENT_ARRAY[i] == " "):
             global_string+=" "
             continue
-        print("picking block")
+        print(i)
+        # print("LOOKUP_OUTPUT = ",lookup.LOOKUP_OUTPUT)
+        # print("DYNA_1_POS = ",lookup.DYNA_1_POS)
+        # print("DYNA_2_POS = ",lookup.DYNA_2_POS)
+        #--------------- PICK FORWARD --------------------------
+        print("Picking ",CURRENT_ARRAY[i]," from arena")
+        
         global_string+=string[i]
         obj.update_label(global_string)
-        time.sleep(1.5)
-        print("placing block")
+
+        lookup.lookup(CURRENT_ARRAY[i],0)
+        # # eg:- "A",pick
+        # print("LOOKUP_OUTPUT = ",lookup.LOOKUP_OUTPUT)
+        dynamixel.GO_TO_DYNA_1_POS = lookup.LOOKUP_OUTPUT[0]
+        dynamixel.GO_TO_DYNA_2_POS = lookup.LOOKUP_OUTPUT[1]
+        dynamixel.dyna_move()
+        lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
+        lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+        #arduino.pick(LOOKUP_OUTPUT[2])
+        
+        # print("DYNA_1_POS = ",lookup.DYNA_1_POS)
+        # print("DYNA_2_POS = ",lookup.DYNA_2_POS)
+        # print("----")
+        #-------------------------------------------------------
+        time.sleep(3)
+        print("----")
+        #---------------- PLACE FORWARD ------------------------
+        print("Placing ",CURRENT_ARRAY[i]," on display area")
+
         global_string+='....'
         obj.update_label(global_string)
-        time.sleep(1.5)
-        p=i+1
+
+        dynamixel.GO_TO_DYNA_1_POS = DISPLAY_AREA_POSITIONS[i][0]
+        dynamixel.GO_TO_DYNA_2_POS = DISPLAY_AREA_POSITIONS[i][1]
+        dynamixel.dyna_move()
+        lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
+        lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+        #arduino.place(DISPLAY_AREA_something)
+        p = i+1
         if(FLAG):
             break
-            
-    for k in range(p):
+        #-------------------------------------------------------
+        print("-----------------")
+        time.sleep(3)
+    print("wait thoda...\nwait thoda...\nwait thoda...")
+    print("-----------------")
+    for k in range (p):
         i = p-k-1
         if(CURRENT_ARRAY[i] == " "):
-            global_string = global_string[:-1]
-            continue
-        print(i)
-        print("picking block again")
+        	global_string = global_string[:-1]
+        	continue
+        #----------------- PICK REVERSE ------------------------
+        print("Picking ",CURRENT_ARRAY[i]," from display area")
+
         global_string = global_string[:-4]
         obj.update_label(global_string)
-        time.sleep(1.5)
-        print("placing block again")
+
+        dynamixel.GO_TO_DYNA_1_POS = DISPLAY_AREA_POSITIONS[i][0]
+        dynamixel.GO_TO_DYNA_2_POS = DISPLAY_AREA_POSITIONS[i][1]
+        dynamixel.dyna_move()
+        lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
+        lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+        #arduino.pick(DISPLAY_AREA_something)
+        
+        #-------------------------------------------------------
+        time.sleep(3)
+        print("----")
+        #--------------- PLACE REVERSE --------------------------
+        print("Placing ",CURRENT_ARRAY[i]," in arena")
+
         global_string = global_string[:-1]
         obj.update_label(global_string)
-        time.sleep(1.5)
 
-# l = [[[],[]],[[],[],[]],[[],[],[],[]],[[],[]],[[]],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+        lookup.lookup(CURRENT_ARRAY[i],1)
+        dynamixel.GO_TO_DYNA_1_POS = lookup.LOOKUP_OUTPUT[0]
+        dynamixel.GO_TO_DYNA_2_POS = lookup.LOOKUP_OUTPUT[1]
+        dynamixel.dyna_move()
+        lookup.DYNA_1_POS = dynamixel.GO_TO_DYNA_1_POS
+        lookup.DYNA_2_POS = dynamixel.GO_TO_DYNA_2_POS
+        #arduino.place(LOOKUP_OUTPUT[2])
+        
+        #-------------------------------------------------------
+        print("-----------------")
+        time.sleep(3)
+	print("bring it on")
 
-##def get_max_no_of_blocks(character) :
-##    global l
-##    def char_to_int(character) : 
-## 	for i in range(256) : 
-##            if(chr(i) == character) : 
-##                return i
-##    index = char_to_int(character) - 65
-##    return len(l[index])
+@debug()
+def display_area_calc():
+    global CURRENT_ARRAY_LENGTH
+    global DISPLAY_AREA_POSITIONS
 
-# print(get_max_no_of_blocks('b'))
+    DISPLAY_AREA_POSITIONS = [[23,32],[34,43],[45,54],[56,65],[67,76],[78,87],[89,98]]
+
+def check_if_blocks_out_of_place():
+    f=0
