@@ -6,6 +6,7 @@ import serial                            #import the serial library
 import platform
 import serial_ports_setup
 import check_status_packet
+import exception_handling
 
 GO_TO_DYNA_1_POS=0
 GO_TO_DYNA_2_POS=0
@@ -65,7 +66,6 @@ def read(motor_id,location,no_of_bytes):
     if(a==False):
         print("read mein jhol hai")
     else:
-        #print(a)
         return a
 
 def startup(com) :
@@ -86,15 +86,22 @@ def init() :
     [dynamixel] = serial_ports_setup.find_dynamixel_and_arduino()
     print('dynamixel : ',dynamixel)
     # print('arduino : ',arduino)
-    dynamixel = startup(dynamixel)
+
+    '''
+    EXCEPTION CHECK --> cant connect
+    '''
+    try : 
+        dynamixel = startup(dynamixel)
+    except OSError : 
+        exception_handling.handle_exception(__name__,'cant connect')
     # arduino = startup(arduino)
 
 def not_checksum(l) :
-	checksum = 0
-	for i in range(len(l)) :
-		checksum += l[i]
-	not_checksum = (~checksum)&0xff
-	return not_checksum
+    checksum = 0
+    for i in range(len(l)) :
+        checksum += l[i]
+    not_checksum = (~checksum)&0xff
+    return not_checksum
 
 def instruction_length(instruction,*args) :
     instructions_that_require_parameters = [0x02,0x03,0x04]
