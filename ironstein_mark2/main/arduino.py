@@ -23,7 +23,7 @@ def init() :
     '''
     try : 
         arduino = startup(arduino)
-    except OSError : 
+    except OSError: 
         exception_handling.handle_exception(__name__,'cant connect')
 
 def pick(pick_angle) :

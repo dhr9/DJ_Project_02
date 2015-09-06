@@ -24,7 +24,7 @@ def handle_exception(module_name,exception_name,*args) :
 		exception_name in module_names[module_name] :
 		gui.EXCEPTION_MODULE = module_name
 		gui.EXCEPTION = exception_name
-		error_logging.log(module_name + '--> ' + exception_name)
+		error_logging.log(module_name + ':' + exception_name)
 		gui.exception_caught(*args)
 		gui.some_file.n = int(args[0])
 		
@@ -32,4 +32,5 @@ def handle_exception(module_name,exception_name,*args) :
 		print('invalid exception')
 		print()
 
-error_logging.log('some error')
+
+error_logging.log('rana here')
