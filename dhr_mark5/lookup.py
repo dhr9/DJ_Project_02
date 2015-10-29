@@ -23,11 +23,11 @@ def lookup(letter,directive):
 	if (letter == "A"):
 		sort(0,directive)
 		# for A, index is 0
-	if (letter == "K"):
+	if (letter == "B"):
 		sort(1,directive)
-	if (letter == "O"):
+	if (letter == "C"):
 		sort(2,directive)
-	if (letter == "S"):
+	if (letter == "D"):
 		sort(3,directive)
 
 @debug()

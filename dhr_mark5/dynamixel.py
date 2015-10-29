@@ -17,8 +17,8 @@ system = ''
 #arduino = ''
 
 #---DYNAMIXEL VARIABLES---
-motor_1_offset = 2048
-motor_2_offset = 2048
+motor_1_offset = 2048 - 15
+motor_2_offset = 2048 + 50
 
 ##---LIMITING VARIABLES---
 send_and_check_limit = 10
@@ -286,9 +286,10 @@ def position_write(motor_id,goal_pos) :
     send_and_check(motor_id,3,30,h_byte,l_byte)
 
 def dynamixel_initializations():
-    send_and_check(1,3,26,8,8,48)   #PID for motor 1
-    send_and_check(2,3,26,8,8,48)   #PID for motor 2
-    
+    send_and_check(1,3,26,8,8,24)   #PID for motor 1
+    send_and_check(2,3,26,8,8,24)   #PID for motor 2
+    send_and_check(1,3,32,0,1)
+    send_and_check(2,3,32,0,1)
 #-------------------------------------------------------------------
 
 
@@ -311,6 +312,12 @@ def store_in_list(angle):
 
 def pid(p,i,d):
     send_and_check(2,3,26,d,i,p)
+
+def speed_control():
+    speed_high = 7
+    speed_low  = 0
+    send_and_check(2,3,32,speed_low,speed_high)
+
 
     #k()#~~~~~~~~~~~~~~~~~!!!!!!!!@@@@@@@@@@#########!!!!!!!!!!!!!!
 
@@ -340,12 +347,13 @@ def pid(p,i,d):
 ##    GO_TO_DYNA_2_POS = angle2
 ##    dyna_move()
 
-def move_to(angle2,angle1):
+def move_to(angle1,angle2):
     global GO_TO_DYNA_1_POS
     global GO_TO_DYNA_2_POS
-
-    GO_TO_DYNA_1_POS = angle1
-    GO_TO_DYNA_2_POS = angle2
+    GO_TO_DYNA_1_POS = (angle1)
+    GO_TO_DYNA_2_POS = (angle2)
+##    GO_TO_DYNA_1_POS = a(angle1)
+##    GO_TO_DYNA_2_POS = a(angle2)
     dyna_move()
 
 def send(motor_id,instruction,*args) :
@@ -370,6 +378,10 @@ def k(a):
     move_to(a)
     f = [y for x,y in RANDOM_LIST]
     RANDOM_LIST_2.append(f)
+
+def a(num):
+    a = int(num*4096.0/360)
+    return a
 
 #------------------------------------------------------------
 
