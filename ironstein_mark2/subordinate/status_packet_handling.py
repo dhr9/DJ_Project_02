@@ -82,15 +82,14 @@ def error_service_routine(error_byte_list,type = 0) :
         6 : 'instruction error',
         7 : 'invalid error byte',
         }
-        error_message = ''
+        
         for i in range(len(error_byte_list)) :
             if(error_byte_list[i]) :
                 exception_handling.handle_exception(__name__,error.get(i))
                 
     elif(type == 1) :
-        error_message = 'USER DEFINED ERROR : '
         error = {
-        1 : 'COMMUNICATION ERROR'
+        1 : 'communication error'
         }
         error_message += error.get(error_byte_list)
         print(error_message)
