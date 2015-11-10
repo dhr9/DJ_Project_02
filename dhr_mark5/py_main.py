@@ -130,3 +130,5 @@ def display_area_calc():
 
 def check_if_blocks_out_of_place():
     f=0
+
+# dynamixel.move_to(400,1500)
