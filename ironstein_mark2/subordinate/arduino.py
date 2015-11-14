@@ -5,11 +5,11 @@
 ##m = os.listdir()
 ##print('sdag',m)
 import os
-os.chdir('/Users/ironstein/Documents/projects working directory/SCARA/DJ_Project_02/ironstein_mark2')
-
+os.chdir('/Users/ironstein/Documents/projects working directory/SCARA/DJ_Project_02/ironstein_mark2/subordinate')
+print(os.listdir(os.getcwd()))
 ##from subordinate import serial_ports_setup
-import subordinate
-
+import serial_ports_setup
+import serial 
 arduino = ''
 
 def init() :
@@ -33,7 +33,7 @@ def init() :
         exception_handling.handle_exception(__name__,'cant connect')
 
 def pick(pick_angle) :
-    arduino.write(chr(pick_angle))
+    arduino.write(chr(200) + chr(222) + chr(pick_angle))
 
 def place(place_angle) :
     arduino.write(chr(211) + chr(222) + chr(place_angle))
