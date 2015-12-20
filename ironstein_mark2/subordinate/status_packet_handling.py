@@ -1,51 +1,5 @@
-from string_handling import char_to_int
-
-def get_status_packet(instruction_packet,status_packet) :
-    common_string = ''
-    for i in range(3) :
-        common_string += instruction_packet[i]
-    if(common_string not in status_packet) :
-                        print('common string not there')
-                        return False
-    for i in range(len(status_packet)) :
-        if((status_packet[i] == common_string[0]) and \
-            (status_packet[i+1] == common_string[1]) and \
-            (status_packet[i+2] == common_string[2])) :
-            break
-
-    number_of_parameters = char_to_int(status_packet[i+3]) - 2
-    error_byte = status_packet[i+4]
-    parameters = ''
-    for j in range(i+5,i+5+number_of_parameters) :
-        parameters += status_packet[j]
-    print_packet(parameters)
-    checksum = status_packet[i+5+number_of_parameters]
-    return_status_packet = common_string
-    return_status_packet += chr(number_of_parameters + 2)
-    return_status_packet += error_byte
-    return_status_packet += parameters
-    return_status_packet += checksum
-    if(check_checksum(return_status_packet)) :
-        return return_status_packet
-    return False
-
-def check_checksum(status_packet) :
-
-    def not_checksum(l) :
-        checksum = 0
-        for i in range(len(l)) :
-            checksum += l[i]
-        not_checksum = (~checksum)&0xff
-        return not_checksum
-
-    checksum = []
-    for i in range(2,len(status_packet)-1) :
-        checksum.append(char_to_int(status_packet[i]))
-    not_checksum_ = not_checksum(checksum)
-
-    if(chr(not_checksum_) != status_packet[-1]) :
-        return False
-    return True
+import string_handling # char_to_int
+import exception_handling # handle_exception
 
 def print_packet(packet) :
 
@@ -54,12 +8,87 @@ def print_packet(packet) :
     # print()
 
     for character in packet :
-        print (hex(char_to_int(character))),
+        print (hex(string_handling.char_to_int(character))),
     print
+
+def get_status_packet(instruction_packet,status_packet) :
+
+    '''
+    retrives status packet from the string returned by dynamixel.
+    eliminates all the noise, and extra bits from the status packet
+    returned by the dynamixel
+    '''
+    
+    #------------------ comment when dynamixel 1 works ------------------------
+    if(instruction_packet[2] == '\x01'):
+        return True
+    #-------------------------------------------------------------------------
+
+    common_string = ''      # is the string of initial characters that need to
+                            # be both in the instruction packet and the status packet
+    for i in range(3) :
+        common_string += instruction_packet[i]
+    if(common_string not in status_packet) :
+        print('common string not there')
+        return False
+    
+    #check the index of the character where the status packet actually starts.
+    #basically counter the effects of noise in the received status packet
+    #by finding exactly where the status packet is in the string
+    for i in range(len(status_packet)) :
+        if((status_packet[i] == common_string[0]) and \
+            (status_packet[i+1] == common_string[1]) and \
+            (status_packet[i+2] == common_string[2])) :
+            break
+
+    number_of_parameters = string_handling.char_to_int(status_packet[i+3]) - 2
+    error_byte = status_packet[i+4]
+    parameters = ''
+    for j in range(i+5,i+5+number_of_parameters) :
+        parameters += status_packet[j]
+    print_packet(parameters)
+
+    checksum = status_packet[i+5+number_of_parameters]
+    return_status_packet = common_string
+    return_status_packet += chr(number_of_parameters + 2)
+    return_status_packet += error_byte
+    return_status_packet += parameters
+    return_status_packet += checksum
+
+    def check_checksum(status_packet) :
+
+        def not_checksum(l) :
+            checksum = 0
+            for i in range(len(l)) :
+                checksum += l[i]
+            not_checksum = (~checksum)&0xff
+            return not_checksum
+
+        checksum = []
+        for i in range(2,len(status_packet)-1) :
+            checksum.append(string_handling.char_to_int(status_packet[i]))
+        not_checksum_ = not_checksum(checksum)
+
+        if(chr(not_checksum_) != status_packet[-1]) :
+            return False
+        return True
+
+    #finally, check if checksum is correct
+    if(check_checksum(return_status_packet)) :
+        return return_status_packet
+    return False
+
+
 
 def check_for_error(status_packet) :
 
-    error_byte = char_to_int(status_packet[4])
+    '''
+    Checks for error in status packet.
+    Returns a list containing the bit numbers that contain errors in the 
+    error bit, as returned by the dynamixel.
+    '''
+
+    error_byte = string_handling.char_to_int(status_packet[4])
     if(error_byte == 0) :
         return False
     else :

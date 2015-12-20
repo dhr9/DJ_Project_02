@@ -23,11 +23,11 @@ def startup(com) :
     return ser
 
 ##arduino2 = startup('com4')
-arduino =  startup('com3')
-dynamixel = startup('com7')
+##arduino =  startup('com3')
+##dynamixel = startup('com7')
 ##dynamixel = startup('/dev/tty.usbserial-A90246TV')
 ##arduino = startup('/dev/tty.usbmodem1411')
-##arduino = startup('/dev/tty.usbmodem1421')
+arduino2 = startup('/dev/tty.usbmodem1421')
 
 
 '''
