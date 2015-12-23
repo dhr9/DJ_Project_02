@@ -1,3 +1,5 @@
+import time
+
 def log(error) :
 
     class get_time() :
@@ -25,7 +27,6 @@ def log(error) :
             print('week_day : ',self.week_day)
 
         def get_time(self) :
-            import time
 
             def get_before_and_after(string,after,before) :
                 dont_need_character_list = [' ']

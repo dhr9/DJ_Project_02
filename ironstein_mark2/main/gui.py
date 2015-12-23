@@ -1,36 +1,24 @@
-import py_main
+import os
+os.chdir('/users/ironstein/documents/projects working directory/scara/dj_project_02/ironstein_mark2/test')
 
-print("import complete")
-print("khel shuru")
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+EXCEPTION_MODULE = 'none'
+EXCEPTION = 'none'
 
-py_main.CURRENT_ARRAY = ['A','R','A','A']
+def exception_caught(*args) :
+	print(args)
+	global EXCEPTION,EXCEPTION_MODULE
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+	'''
+	important code to be added pertaining to exception handling here
+	just printing exceptions for the time being
+	'''
 
-py_main.modify_blocks()
+	print(EXCEPTION_MODULE + ' --> ' +EXCEPTION)
+	print('printing complete')
+	print()
+	#some_file.n = int(args[0])
 
-print(py_main.CURRENT_ARRAY_LENGTH)
-print(py_main.CURRENT_ARRAY)
+print('-----------------------------------')
 
-# py_main.CURRENT_ARRAY = ['D','H','R']
-
-# print(py_main.CURRENT_ARRAY_LENGTH)
-# print(py_main.CURRENT_ARRAY)
-
-# py_main.modify_blocks()
-
-# print(py_main.CURRENT_ARRAY_LENGTH)
-# print(py_main.CURRENT_ARRAY)
-
-# py_main.CURRENT_ARRAY = ['R','I']
-
-# print(py_main.CURRENT_ARRAY_LENGTH)
-# print(py_main.CURRENT_ARRAY)
-
-# py_main.modify_blocks()
-
-# print(py_main.CURRENT_ARRAY_LENGTH)
-# print(py_main.CURRENT_ARRAY)
+import some_file
+some_file.do_some_work()

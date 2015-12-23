@@ -1,7 +1,6 @@
-from debug import debug
-from string_handling import *
-
+from string_handling import * # skip_character, skip_untli_character, skip_useless, remove_useless, string_to_int
 import os
+
 working_directory = '/users/ironstein/documents/projects working directory/SCARA/DJ_Project_02/ironstein_mark2'
 os.chdir(working_directory)
 
@@ -87,121 +86,128 @@ def sort(index,directive):
 ########### RIYANSH CODES ##########
 
 def init_lookup() :
-	logs = open('lookup.txt','r')
-	logs_ = logs.read()
-	#print(logs_)
-	edit_position_array(logs_)
-	logs.close()
 
-def edit_position_array(logs) :
+	def edit_position_array(logs) :
 
-	character_array = []
-	array = []
-	i = 0
-	while(i < len(logs)) :
+		character_array = [] # list of characters : "a" or "b" or ...
+		array = [] 	# list of strings in the lookup.txt corresponding to 
+					#characters in characters in character_array
+		i = 0
 
-		i += skip_useless(logs,i)
+		while(i < len(logs)) :
 
-		if(logs[i] == 'eof') :
-			break
-		if(logs[i] == '#') :
-			i += skip_until_character(logs,'\n',i)
-			break
-
-		character_array.append(logs[i])
-		i += skip_until_character(logs,'{',i)
-		i += 1
-
-		string = ''
-		while(logs[i] != '}') :
-			string += logs[i]
-			i += 1
-		i += 1
-
-		array.append(string)
-		if(i < len(logs)) :
 			i += skip_useless(logs,i)
-		else :
-			break
 
-	# now we have the array consisting of
-	for i in range(len(array)) :
-		array[i] = remove_useless(array[i])
+			#if reached end of file
+			if(logs[i] == 'eof') :
+				break
+			#if commented line
+			if(logs[i] == '#') :
+				i += skip_until_character(logs,'\n',i)
+				break
 
+			#first character of a line : "a" or "b" or ...
+			character_array.append(logs[i])
+			i += skip_until_character(logs,'{',i)
+			i += 1
 
-	array = decode_array(array)
-	#print(array)
-
-	return_array = []
-	for i in range(len(array)) :
-		return_array.append([])
-		for j in range(len(array[i])) :
-			return_array[i].append([])
-
-	#print(return_array)
-
-	for i in range(len(array)) :
-		for j in range(len(array[i])) :
-			#print(len(array[i][j]))
-			k = 0
-			while(k < len(array[i][j])) :
-				string = ''
-				while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) :
-					string += array[i][j][k]
-					k += 1
-					#print(k)
-				k += 1
-
-				return_array[i][j].append(string)
-				#print(string)
-
-	#print(return_array)
-	array = return_array
-
-	return_array = []
-	for i in range(len(array)) :
-		return_array.append([])
-		for j in range(len(array[i])) :
-			return_array[i].append([])
-
-	for i in range(len(array)) :
-		for j in range(len(array[i])) :
-			for k in range(len(array[i][j])) :
-				return_array[i][j].append(string_to_int(array[i][j][k]))
-
-	#print(return_array)
-
-	global POSITION_ARRAY
-	global POSITION_ARRAY_FLAGS
-	POSITION_ARRAY = return_array
-
-	for character in POSITION_ARRAY :
-		array = []
-		for element in character :
-			array.append(element.pop())
-		POSITION_ARRAY_FLAGS.append(array)
-
-def decode_array(array) :
-	return_array = []
-	for i in range(len(array)) :
-		return_array.append([])
-	for i in range(len(array)) :
-		j = 0
-		while(j < len(array[i])) :
-			skip_useless(array[i],j)
-			skip_character(array[i],',',j)
-			j += skip_until_character(array[i],'[',j)
-			j += 1
 			string = ''
-			while(array[i][j] != ']') :
-				string += array[i][j]
-				j += 1
-			j += 1
-			return_array[i].append(string)
-	return(return_array)
+			while(logs[i] != '}') :
+				string += logs[i]
+				i += 1
+			i += 1
 
-def string_to_int(string) :
-	return float(string)
+			array.append(string)
+			if(i < len(logs)) :
+				i += skip_useless(logs,i)
+			else :
+				break
+
+		#character_array and array lists are filled
+		for i in range(len(array)) :
+			array[i] = remove_useless(array[i])
+
+		def decode_array(array) :
+			'''
+			isolate strings pertaining to each block for a character
+			returns an array of arrays that consist of strings, corresponding
+			to each block
+			'''
+			return_array = []
+			for i in range(len(array)) :
+				return_array.append([])
+			for i in range(len(array)) :
+				j = 0
+				while(j < len(array[i])) :
+					skip_useless(array[i],j)
+					skip_character(array[i],',',j)
+					j += skip_until_character(array[i],'[',j)
+					j += 1
+					string = ''
+					while(array[i][j] != ']') :
+						string += array[i][j]
+						j += 1
+					j += 1
+					return_array[i].append(string)
+			return(return_array)
+
+		array = decode_array(array)
+
+		#create a list of lists consisting of empty lists 
+		#[ [ [],[],...],...]
+		return_array = []
+		for i in range(len(array)) :
+			return_array.append([])
+			for j in range(len(array[i])) :
+				return_array[i].append([])
+
+		#fill the return_array
+		for i in range(len(array)) :
+			for j in range(len(array[i])) :
+				k = 0
+				#fill the empty arrays with numbers (as strings)
+				while(k < len(array[i][j])) :
+					string = ''
+					while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) :
+						string += array[i][j][k]
+						k += 1
+					k += 1
+
+					return_array[i][j].append(string)
+
+		array = return_array
+
+		#convert the integers (as strings) in return array to integers
+		return_array = []
+		for i in range(len(array)) :
+			return_array.append([])
+			for j in range(len(array[i])) :
+				return_array[i].append([])
+
+		for i in range(len(array)) :
+			for j in range(len(array[i])) :
+				for k in range(len(array[i][j])) :
+					return_array[i][j].append(string_to_int(array[i][j][k]))
+
+		#------
+
+		global POSITION_ARRAY
+		global POSITION_ARRAY_FLAGS
+		POSITION_ARRAY = return_array
+
+		for character in POSITION_ARRAY :
+			array = []
+			for element in character :
+				array.append(element.pop())
+			POSITION_ARRAY_FLAGS.append(array)
+
+	with open('lookup.txt','r') as logs :
+		logs_ = logs.read()
+		edit_position_array(logs_)
+		logs.close()
+
+
+
 
 ######### Initialization call #########
 

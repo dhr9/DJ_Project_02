@@ -8,6 +8,11 @@ def exception_caught(*args) :
 	print(args)
 	global EXCEPTION,EXCEPTION_MODULE
 
+	'''
+	important code to be added pertaining to exception handling here
+	just printing exceptions for the time being
+	'''
+
 	print(EXCEPTION_MODULE + ' --> ' +EXCEPTION)
 	print('printing complete')
 	print()

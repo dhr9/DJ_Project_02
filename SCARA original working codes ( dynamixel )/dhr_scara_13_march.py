@@ -22,12 +22,18 @@ def startup(com) :
     print(ser.baudrate)
     return ser
 
+<<<<<<< HEAD
 arduino2 = startup('com3')
 # arduino =  startup('com3')
 # dynamixel = startup('com7')
+=======
+##arduino2 = startup('com4')
+##arduino =  startup('com3')
+##dynamixel = startup('com7')
+>>>>>>> 94c48c0a2e32cd278cc834d7554a6b7a5f2e0cc4
 ##dynamixel = startup('/dev/tty.usbserial-A90246TV')
 ##arduino = startup('/dev/tty.usbmodem1411')
-##arduino = startup('/dev/tty.usbmodem1421')
+arduino2 = startup('/dev/tty.usbmodem1421')
 
 
 '''
