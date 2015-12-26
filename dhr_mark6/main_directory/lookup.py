@@ -1,6 +1,8 @@
+import sys
+gui = sys.modules["__main__"]
+
 from subordinate_directory.debug import debug
 from subordinate_directory.string_handling import *
-
 
 LOOKUP_OUTPUT = [0,0,0]
 DYNA_1_POS = 0
@@ -93,137 +95,141 @@ def mod(s):
 def change_array(array,num):
 	#num=0 ==> POSITION_ARRAY_FLAGS
 	#num=1 ==> DISPLAY_AREA_POSITIONS
-	a = open("variable_array.txt","r")
-	k=[]
-	for line in a:
-		k.append(line)
-	a.close()
+	with open(gui.WORKING_DIRECTORY + "main_directory\\variable_array.txt","r") as variable_array: 
+		k=[]
+		for line in variable_array:
+			k.append(line)
+	
 	s = str(array)
 	if(num != len(k)-1):
 		s += '\n'
 	k[num] = s
-	a = open("variable_array.txt","w")
-	for i in range(len(k)):
-		a.write(k[i])
-	a.close()
+	
+	with open(gui.WORKING_DIRECTORY + "main_directory\\variable_array.txt","w") as variable_array :
+		for i in range(len(k)):
+			variable_array.write(k[i])
 ########### RIYANSH CODES ##########
 
-#@debug('init_lookup')
-def init_lookup() : 
-	logs = open('lookup.txt','r')
-	logs_ = logs.read()
-	#print(logs_)
-	edit_position_array(logs_)
-	logs.close()
+def init_lookup() :
 
-#@debug()
-def edit_position_array(logs) : 
+	def edit_position_array(logs) :
+		global POSITION_ARRAY
+		global POSITION_ARRAY_FLAGS
 
-	character_array = []
-	array = []
-	i = 0
-	while(i < len(logs)) : 
+		character_array = [] # list of characters : "a" or "b" or ...
+		array = [] 	# list of strings in the lookup.txt corresponding to 
+					#characters in character_array
+		i = 0
 
-		i += skip_useless(logs,i)
+		while(i < len(logs)) :
 
-		if(logs[i] == '#') : 
-			i += skip_until_character(logs,'\n',i)
-			break
-
-		character_array.append(logs[i])
-		i += skip_until_character(logs,'{',i)
-		i += 1
-
-		string = ''
-		while(logs[i] != '}') : 
-			string += logs[i] 
-			i += 1
-		i += 1
-
-		array.append(string)
-		if(i < len(logs)) : 
 			i += skip_useless(logs,i)
-		else : 
-			break
 
-	# print(logs)
+			#if reached end of file/
+			if(logs[i] == 'eof') :
+				break
+			#if commented line
+			if(logs[i] == '#') :
+				i += skip_until_character(logs,'\n',i)
+				break
 
-	# now we have the array consisting of 
-	for i in range(len(array)) : 
-		array[i] = remove_useless(array[i])
+			#first character of a line : "a" or "b" or ...
+			character_array.append(logs[i])
+			i += skip_until_character(logs,'{',i)
+			i += 1
 
-
-	array = decode_array(array)
-	#print(array)
-
-	return_array = []
-	for i in range(len(array)) : 
-		return_array.append([])
-		for j in range(len(array[i])) : 
-			return_array[i].append([])
-
-	#print(return_array)
-
-	for i in range(len(array)) : 
-		for j in range(len(array[i])) : 
-			#print(len(array[i][j]))
-			k = 0
-			while(k < len(array[i][j])) : 
-				string = ''
-				while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) : 
-					string += array[i][j][k]
-					k += 1
-					#print(k)
-				k += 1
-
-				return_array[i][j].append(string)
-				#print(string)
-
-	#print(return_array)
-	array = return_array
-
-	return_array = []
-	for i in range(len(array)) : 
-		return_array.append([])
-		for j in range(len(array[i])) : 
-			return_array[i].append([])
-
-	for i in range(len(array)) : 
-		for j in range(len(array[i])) : 
-			for k in range(len(array[i][j])) : 
-				return_array[i][j].append(string_to_int(array[i][j][k]))
-
-	#print(return_array)
-
-	global POSITION_ARRAY 
-	POSITION_ARRAY = return_array
-
-	global POSITION_ARRAY_FLAGS
-	for character in POSITION_ARRAY :
-		array = [] 
-		for element in character : 
-			array.append(element.pop())
-		POSITION_ARRAY_FLAGS.append(array)
-
-#@debug()
-def decode_array(array) : 
-	return_array = []
-	for i in range(len(array)) : 
-		return_array.append([])
-	for i in range(len(array)) : 
-		j = 0
-		while(j < len(array[i])) : 
-			skip_useless(array[i],j)
-			skip_character(array[i],',',j)
-			j += skip_until_character(array[i],'[',j)
-			j += 1
 			string = ''
-			while(array[i][j] != ']') : 
-				string += array[i][j]
-				j += 1
-			j += 1
-			return_array[i].append(string)
-	return(return_array)
+			while(logs[i] != '}') :
+				string += logs[i]
+				i += 1
+			i += 1
+
+			array.append(string)
+			if(i < len(logs)) :
+				i += skip_useless(logs,i)
+			else :
+				break
+
+		#character_array and array lists are filled
+		for i in range(len(array)) :
+			array[i] = remove_useless(array[i])
+
+		def decode_array(array) :
+			'''
+			isolate strings pertaining to each block for a character
+			returns an array of arrays that consist of strings, corresponding
+			to each block
+			'''
+			return_array = []
+			for i in range(len(array)) :
+				return_array.append([])
+			for i in range(len(array)) :
+				j = 0
+				while(j < len(array[i])) :
+					skip_useless(array[i],j)
+					skip_character(array[i],',',j)
+					j += skip_until_character(array[i],'[',j)
+					j += 1
+					string = ''
+					while(array[i][j] != ']') :
+						string += array[i][j]
+						j += 1
+					j += 1
+					return_array[i].append(string)
+			return(return_array)
+
+		array = decode_array(array)
+
+		#create a list of lists consisting of empty lists 
+		#[ [ [],[],...],...]
+		return_array = []
+		for i in range(len(array)) :
+			return_array.append([])
+			for j in range(len(array[i])) :
+				return_array[i].append([])
+
+		#fill the return_array
+		for i in range(len(array)) :
+			for j in range(len(array[i])) :
+				k = 0
+				#fill the empty arrays with numbers (as strings)
+				while(k < len(array[i][j])) :
+					string = ''
+					while((k < len(array[i][j])) and (array[i][j][k] != ',')and(array[i][j][k] != '\n')) :
+						string += array[i][j][k]
+						k += 1
+					k += 1
+
+					return_array[i][j].append(string)
+
+		array = return_array
+
+		#convert the integers (as strings) in return array to integers
+		return_array = []
+		for i in range(len(array)) :
+			return_array.append([])
+			for j in range(len(array[i])) :
+				return_array[i].append([])
+
+		for i in range(len(array)) :
+			for j in range(len(array[i])) :
+				for k in range(len(array[i][j])) :
+					return_array[i][j].append(string_to_int(array[i][j][k]))
+
+		#------
+
+		POSITION_ARRAY = return_array
+
+		for character in POSITION_ARRAY :
+			array = []
+			for element in character :
+				array.append(element.pop())
+			POSITION_ARRAY_FLAGS.append(array)
+
+	with open(gui.WORKING_DIRECTORY + 'main_directory\lookup.txt','r') as logs :
+		logs_ = logs.read()
+		edit_position_array(logs_)
+		logs.close()
 
 ######### Initialization call #########
 
