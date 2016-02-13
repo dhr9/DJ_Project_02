@@ -23,7 +23,7 @@ def startup(com) :
     return ser
 
 #<<<<<<< HEAD
-arduino2 = startup('com6')
+arduino2 = startup('com7')
 # arduino =  startup('com3')
 # dynamixel = startup('com7')
 #=======
